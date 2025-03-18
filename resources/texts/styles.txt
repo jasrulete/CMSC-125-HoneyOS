@@ -1,0 +1,1030 @@
+body {
+  margin: 0;
+  overflow: hidden;
+}
+
+#splash-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #000000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-family: Arial, sans-serif;
+  opacity: 0;
+  animation: fadeIn 2s ease-out forwards;
+}
+
+
+#splash-screen #additional-text {
+  font-size: 18px; /* Adjust font size as needed */
+  color: #666; color: rgb(255, 255, 255); /* Adjust text color as needed */
+  margin-top: 10px; /* Adjust spacing between "Honey OS" and the additional text */
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+#splash-screen #logo {
+  width: 200px;
+  height: 200px;
+  margin-bottom: 10px;
+  animation: rollIn 5s ease-out forwards; /* Roll-in animation */
+}
+
+@keyframes rollIn {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) rotate(-90deg);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) rotate(0);
+  }
+}
+
+#splash-screen p {
+  margin: 0;
+  opacity: 0;
+  animation: fadeInText 2s ease-out 2s forwards; /* Delayed fade-in animation for text */
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+  font-size: 48px;
+  color: rgb(255, 184, 37);
+}
+
+@keyframes fadeInText {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+#loading-bar-container {
+  margin-top: 30px;
+  width: 50%;
+  text-align: center;
+  display: none; /* initially hide the loading bar */
+}
+
+#loading-bar {
+  width: 0;
+  height: 10px;
+  background-color: rgb(255, 184, 37);
+  animation: loadingBarAnimation 5s ease-out forwards; /* Adjust the duration as needed */
+}
+
+#splash-screen #pleaseWait {
+  margin: 0;
+  opacity: 0;
+  animation: fadeInText 10s ease-out 2s forwards; /* Delayed fade-in animation for text */
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+  font-size: 24px;
+  color: rgb(255, 184, 37);
+}
+
+@keyframes loadingBarAnimation {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+body {
+  background-color: black;
+  margin: 0;
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-end;
+  min-height: 100vh;
+  padding: 40px;
+  box-sizing: border-box;
+  position: relative;
+}
+
+/* body::after {
+    content:"";
+    background-image: url('img/bgg.png');
+    background-repeat: no-repeat;
+    background-position: right center;
+    background-size:contain; /* or contain */
+/* position: absolute; 
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 60%;
+    z-index: 1;
+} */
+
+.logo {
+  max-width: 120px;
+  max-height: 120px;
+  z-index: 1; /* Set a higher z-index for the logo */
+  position: absolute;
+  top: 810px;
+  right: 30px;
+}
+
+
+.logo1 {
+    max-width: 100%;
+    max-height: 200px;
+    z-index: 2;
+
+}
+
+.hexagon-container {
+  position: absolute;
+  top: 30%; /* Adjust this value to move the hexagons up or down */
+  right: 9.7%; /* Adjust this value to move the hexagons left or right */
+  transform: translateY(-50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1;
+}
+
+.hexagon-container1 {
+  position: absolute;
+  top: 11.2%; /* Adjust this value to move the hexagons up or down */
+  right: 13.56%; /* Adjust this value to move the hexagons left or right */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1;
+}
+.hexagon-container1-1 {
+  position: absolute;
+  top: 11.8%; /* Adjust this value to move the hexagons up or down */
+  right: 13.9%; /* Adjust this value to move the hexagons left or right */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1;
+}
+
+.hexagon-container2 {
+  position: absolute;
+  top: 34%; /* Adjust this value to move the hexagons up or down */
+  right: 13.5%; /* Adjust this value to move the hexagons left or right */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1;
+}
+
+.hexagon-container3 {
+  position: absolute;
+  top: 45.3%; /* Adjust this value to move the hexagons up or down */
+  right: 17.4%; /* Adjust this value to move the hexagons left or right */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1;
+}
+
+.hexagon-container4 {
+  position: absolute;
+  top: 56.6%; /* Adjust this value to move the hexagons up or down */
+  right: 5.9%; /* Adjust this value to move the hexagons left or right */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1;
+}
+
+.hexagon-container5 {
+    position: absolute;
+    top: -0.1%; /* Adjust this value to move the hexagons up or down */
+    right: 17.4%; /* Adjust this value to move the hexagons left or right */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
+  }
+
+  .hexagon-container5-1 {
+    position: absolute;
+    top: -0.1%; /* Adjust this value to move the hexagons up or down */
+    right: 40.4%; /* Adjust this value to move the hexagons left or right */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
+  }
+
+  .hexagon-container5-2 {
+    position: absolute;
+    top: -0.1%; /* Adjust this value to move the hexagons up or down */
+    right: 2.3%; /* Adjust this value to move the hexagons left or right */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
+  }
+
+  .hexagon-container6{
+    position: absolute;
+    top: 68%; /* Adjust this value to move the hexagons up or down */
+    right: 9.8%; /* Adjust this value to move the hexagons left or right */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
+  }
+  
+  .hexagon-container6-1{
+    font-size: 50px;
+    font-weight: lighter;
+    font-family:Arial, Helvetica, sans-serif;
+    color: rgb(0, 0, 0);
+    position: absolute;
+    top: 68%; /* Adjust this value to move the hexagons up or down */
+    right: 55.5%; /* Adjust this value to move the hexagons left or right */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
+  }
+
+  .hexagon-container6-2{
+    font-size: 50px;
+    font-weight: lighter;
+    font-family:Arial, Helvetica, sans-serif;
+    color: rgb(0, 0, 0);
+    position: absolute;
+    top: 68.5%; /* Adjust this value to move the hexagons up or down */
+    right: 25.5%; /* Adjust this value to move the hexagons left or right */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
+  }
+
+
+  .hexagon-container8 {
+    position: absolute;
+    top: 79.4%; /* Adjust this value to move the hexagons up or down */
+    right: -1.79%; /* Adjust this value to move the hexagons left or right */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
+  }
+
+  .hexagon-container8-1 {
+    position: absolute;
+    top: 79.4%; /* Adjust this value to move the hexagons up or down */
+    right: 74.8%; /* Adjust this value to move the hexagons left or right */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
+  }
+
+  .hexagon-container9 {
+    position: absolute;
+    top: 90.8%; /* Adjust this value to move the hexagons up or down */
+    right: 9.8%; /* Adjust this value to move the hexagons left or right */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
+  }
+
+  .hexagon-container10 {
+    position: absolute;
+    top: -11.5%; /* Adjust this value to move the hexagons up or down */
+    right: 5.8%; /* Adjust this value to move the hexagons left or right */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
+  }
+
+  .hexagon {
+    width: 110px;
+    height: 120px;
+    background-color: #ffc700;
+    position: relative;
+    margin: 4px; /* Adjust this value to increase or decrease the space between hexagons */
+    display: flex;
+    flex-direction: column;
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    gap: 5px;
+    justify-content: center;
+    align-items: center;
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  }
+
+.hexagon1 {
+  width: 110px;
+  height: 120px;
+  background-color: #ffc700;
+  border-color: #ffc700;
+  border-width: 10px;
+  position: relative;
+  margin: 4px; /* Adjust this value to increase or decrease the space between hexagons */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+}
+.hexagon1-1 {
+  width: 100px;
+  height: 110px;
+  background-color: #000000;
+  border-color: #ffc700;
+  border-width: 10px;
+  position: relative;
+  margin: 4px; /* Adjust this value to increase or decrease the space between hexagons */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+}
+
+.hexagon2 {
+  width: 110px;
+  height: 120px;
+  background-color: #ffc700;
+  border-color: #ffc700;
+  border-width: 10px;
+  position: relative;
+  margin: 4px; /* Adjust this value to increase or decrease the space between hexagons */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+}
+
+.hexagon3 {
+  width: 110px;
+  height: 120px;
+  background-color: #ffc700;
+  border-color: #ffc700;
+  border-width: 10px;
+  position: relative;
+  margin: 4px; /* Adjust this value to increase or decrease the space between hexagons */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+}
+
+.hexagon4 {
+  width: 110px;
+  height: 120px;
+  background-color: #ffc700;
+  border-color: #ffc700;
+  border-width: 10px;
+  position: relative;
+  margin: 4px; /* Adjust this value to increase or decrease the space between hexagons */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+}
+
+.hexagon5 {
+    width: 110px;
+    height: 120px;
+    background-color: #ffc700;
+    border-color: #ffc700;
+    border-width: 10px;
+    position: relative;
+    margin: 4px; /* Adjust this value to increase or decrease the space between hexagons */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  }
+
+  .hexagon5-1 {
+    width: 110px;
+    height: 120px;
+    background-color:#ffc80068;
+    position: relative;
+    margin: 4px; /* Adjust this value to increase or decrease the space between hexagons */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  }
+
+  .hexagon5-2 {
+    width: 110px;
+    height: 120px;
+    background-color:#ffc800;
+    position: relative;
+    margin: 4px; /* Adjust this value to increase or decrease the space between hexagons */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  }
+  .hexagon6 {
+    width: 110px;
+    height: 120px;
+    background-color: #ffc700;
+    border-color: #ffc700;
+    border-width: 10px;
+    position: relative;
+    margin: 4px; /* Adjust this value to increase or decrease the space between hexagons */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  }
+
+  .hexagon6-2 {
+    width: 100px;
+    height: 110px;
+    background-color: #000000;
+    border-color: #ffc700;
+    border-width: 10px;
+    position: relative;
+    margin: 4px; /* Adjust this value to increase or decrease the space between hexagons */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  }
+
+  .hexagon6-1{
+    width: 110px;
+    height: 120px;
+    background-color: #ffc700;
+    border-color: #ffc700;
+    border-width: 10px;
+    position: relative;
+    margin: 4px; /* Adjust this value to increase or decrease the space between hexagons */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    filter: brightness(1); /* Set initial color to blackscale */
+    transition: background-color 0.3s ease, border-color 0.3s ease; /* Smoothing transition */
+
+  }
+  .hexagon6-1:hover {
+    background-color: #000000; /* Color on hover */
+    filter: brightness(1); /* Set initial color to blackscale */
+  }
+
+
+  .hexagon8 {
+    width: 110px;
+    height: 120px;
+    background-color: #ffc700;
+    position: relative;
+    margin: 4px; /* Adjust this value to increase or decrease the space between hexagons */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  }
+
+  .hexagon8-1 {
+    font-size: 50px;
+    font-weight: lighter;
+    font-family: Arial, Helvetica, sans-serif;
+    width: 110px;
+    height: 120px;
+    background-color: #ffc700;
+    position: relative;
+    margin: 4px; /* Adjust this value to increase or decrease the space between hexagons */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    transition: background-color 0.3s ease, border-color 0.3s ease; /* Smoothing transition */
+    filter: brightness(1); /* Set initial color to blackscale */
+}
+
+.hexagon8-1:hover {
+  background-color: #000000;
+    filter: brightness(1); /* Set initial color to blackscale */
+}
+
+
+  .hexagon9 {
+    width: 110px;
+    height: 120px;
+    background-color: #ffc700;
+    position: relative;
+    margin: 4px; /* Adjust this value to increase or decrease the space between hexagons */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  }
+
+  .hexagon10 {
+    width: 110px;
+    height: 120px;
+    background-color: #ffc700;
+    position: relative;
+    margin: 4px; /* Adjust this value to increase or decrease the space between hexagons */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  }
+
+/* CSS styles for the icons */
+.icon {
+    max-width: 40%;
+    max-height: 40%;
+    transition: max-width 0.3s ease, max-height 0.3s ease;
+    filter: brightness(0); /* Set initial color to blackscale */
+  }
+  
+  /* CSS styles for expanding the icons on hover */
+  .icon:hover {
+    max-width: 60%; /* Expand the width to 100% on hover */
+    max-height: 60%; /* Expand the height to 100% on hover */
+    filter: brightness(1); /* Set initial color to blackscale */
+
+  }
+
+.voice-recognition {
+  margin-top: 20px;
+  color: #ffc700;
+  text-align: center;
+}
+
+.voice-toggle-with-image {
+  position: relative; /* Change from fixed to relative */
+  /* Adjust position based on your layout */
+  /* bottom: 20px; */
+  /* left: 50%; */
+  /* transform: translateX(50%); */
+  margin-top: 20px; /* Adjust as needed */
+  padding: 50px 50px;
+  color: #ffc700;
+  font-size: 16px;
+  background-color: transparent;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  /* Add the background image */
+  background-image: url("img/VoiceCom.png");
+  background-size: contain; /* Adjust the size of the background image */
+  background-repeat: no-repeat; /* Prevent repeating of the background image */
+  background-position: center; /* Center the background image */
+  /* Optionally, you can add padding-left to create space between the image and the text */
+  padding-left: 30px; /* Adjust as needed */
+}
+
+.button-text {
+  display: block;
+  text-align: center;
+  margin-top: 5px; /* Adjust the spacing between the image and text */
+  color: #fffb00; /* Text color */
+}
+
+#voice-message {
+  margin-top: 10px;
+  font-size: 18px;
+  color: #d3b84d;
+}
+
+#editor-container {
+  width: 60%;
+  height: 60%;
+  background-color: rgb(0, 0, 0);
+  color: #ffffff;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  z-index: 1;
+}
+
+#editor-container.hidden {
+  display: none;
+}
+
+#editor-header {
+  background-color: #000000;
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#editor-headerIcons {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 20px;
+
+}
+
+#editor-headerIcons2 {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.editor-icon {
+  width: 25px;
+  height: 30px;
+  margin-right: 8px;
+  cursor: pointer;
+}
+
+.editor-iconLOGO {
+  width: 30px;
+  height: 30px;
+  margin-right: 10px;
+  margin-left: 10px;
+  cursor: pointer;
+}
+
+.editor-iconOPEN{
+  width: 30px;
+  height: 25px;
+  margin-right: 10px;
+  cursor: pointer;
+}
+.editor-iconARROW{
+  width: 30px;
+  height: 25px;
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+
+.editor-icon2 {
+    width: 13px;
+    height: 13px;
+    margin-right: 10px;
+    cursor: pointer;
+    display: flex;
+  flex-direction: column;
+  align-items: center; /* Centers items horizontally */
+  }
+
+
+  .label {
+    font-family: Arial, Helvetica, sans-serif;
+    color: #ffc700;
+    font-size: 12px;
+    gap: 10px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    margin-left: 10px;
+    position: relative; /* Ensure the pseudo-element is positioned relative to this element */
+  }
+  
+  .label::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px; /* Adjust the thickness of the underline as needed */
+    background-color: transparent; /* Initially transparent */
+    transition: background-color 0.3s ease; /* Smooth transition for better UX */
+  }
+  
+  .label:hover::after {
+    background-color:rgb(255, 255, 255); /* Change the background-color on hover */
+  }
+  
+
+  
+
+#code-editor {
+  background-color: #0B1215;
+  color: #0B1215;
+  font-family: Arial, Helvetica, sans-serif;
+  flex-grow: 1;
+  border: none;
+  padding: 10px;
+  font-family: monospace;
+  font-size: 16px;
+  resize: none;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+
+#taskbar {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background-color: #0B1215;
+  color: white;
+  display: flex;
+  justify-content: center;
+  transition: bottom 0.5s ease;
+  z-index: 1;
+}
+
+.taskbaricon{
+  height: 30px;
+  margin: 5px 10px; /* Adjust the margin as needed */
+  margin-left: 10px;
+  transition: max-width 0.3s ease, max-height 0.3s ease;
+  filter: brightness(1); /* Set initial color to blackscale */
+}
+
+.taskbaricon:hover{
+  max-width: 60%; /* Expand the width to 100% on hover */
+  max-height: 60%; /* Expand the height to 100% on hover */
+  filter: brightness(1); /* Set initial color to blackscale */}
+
+#taskbar.hidden {
+  bottom: -50px;
+  background-color: #0B1215;
+
+}
+
+#taskbar:hover {
+  bottom: 0;
+}
+
+.iconPosition{
+  display: flex;
+  flex-direction: row;
+  margin-left: -800px;
+}
+
+/* Drawer styles */
+.drawer {
+  position: fixed;
+  top: 0;
+  left: -250px; /* Start hidden */
+  width: 250px;
+  height: 100%;
+  background-color: #0C0C0C;
+  color: #fff;
+  transition: left 0.3s ease-in-out;
+  z-index: 2; /* Set a higher z-index for the logo */
+}
+
+.drawer ul {
+  list-style: none;
+  padding: 0;
+}
+
+.drawer li {
+  padding: 10px;
+}
+
+.drawer li a {
+  color: #fff;
+  text-decoration: none;
+}
+
+/* Content styles */
+.content {
+  padding-left: 20px; /* Adjust to make space for the drawer */
+}
+
+/* Button to open drawer */
+#openDrawerBtn {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+}
+
+.hexagon-wrapper {
+  display: flex;
+}
+
+.hexagon-wrapper1 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.hexagon-wrapper2 {
+  display: flex;
+}
+
+.hexagon-wrapper3 {
+  display: flex;
+}
+
+.hexagon-wrapper4 {
+  display: flex;
+}
+
+.hexagon-wrapper5 {
+    display: flex;
+  }
+
+  .hexagon-wrapper6 {
+    display: flex;
+  }
+
+  .hexagon-wrapper6-1 {
+    display: flex;
+  }
+
+  .hexagon-wrapper8 {
+    display: flex;
+  }
+
+  .hexagon-wrapper8-1 {
+    display: flex;
+  }
+
+  .hexagon-wrapper9 {
+    display: flex;
+  }
+
+  .hexagon-wrapper10 {
+    display: flex;
+  }
+
+
+.hexagon:hover {
+  background-color: #0B1215; /* Color on hover */
+}
+
+/* hexagon whole screen */
+
+body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #000000;
+}
+
+.hexagon-container7 {
+  position: fixed;
+  z-index: -10; /* Move hexagons to the background */
+}
+
+.hexagon7 {
+    width: 110px;
+    height: 120px;
+    background-color: #000000; /* Default background color */
+    position: absolute;
+    margin: 3px; /* Adjust this value to increase or decrease the space between hexagons */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    clip-path: polygon(51% 0%, 100% 25%, 100% 75%, 51% 100%, 0% 75%, 0% 25%); /* Adjusted clip-path */
+    transition: background-color 0.3s ease, border-color 0.3s ease; /* Smoothing transition */
+}
+
+
+.hexagon7:hover {
+    background-color:#ffc700; /* Hover background color */
+}
+
+
+/* Adjust margin between hexagons */
+.hexagon-container7 {
+  margin: 5px; /* Adjust margin as needed */
+}
+
+/* DATE AND TIME */
+
+.datetime {
+  font-weight: lighter;
+  justify-content: center;
+  align-items: center;
+  color: #ffc700;
+  z-index: 1; /* Move hexagons to the background */
+  display: flex; /* Use flexbox */
+  flex-direction: column; /* Stack elements vertically */
+  font-family:Georgia, 'Times New Roman', Times, serif; /* Change font family */
+}
+
+.time {
+  font-size: 50px;
+  justify-content: center;
+  font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif; /* Change font family */
+}
+
+.date {
+  font-size: 15px;
+  /* Adjust position as needed */
+  margin-top: 3px; /* Add margin to create space between time and date */
+  color: #ffc700; /* Adjust color as needed */
+  font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif /* Change font family */
+}
+
+
+
+/* Light mode hexagon styling */
+.light-mode .hexagon7 {
+    background-color: #ffffff; /* White background color in light mode */
+    color: #0B1215; /* Black text color in light mode */
+}
+
+/* Dark mode hexagon styling */
+.dark-mode .hexagon7 {
+    background-color: #ffffff; /* Black background color in dark mode */
+    color: #ffffff; /* White text color in dark mode */
+}
+
+.dark-mode .hexagon7:hover {
+    background-color:#0B1215; /* Hover background color */
+}
+
+/* SWITCH BUTTON */
+.mode-toggle-button {
+    background-color: transparent;
+    background-image: url('img/Mode.png');
+    background-repeat: no-repeat;
+    background-size: contain;
+    width: 30px;
+    height: 30px;
+    /* Adjust position as needed */
+    position: absolute;
+    top: 810px;
+    right: 160px;
+    /* Add transition for smooth effect */
+    transition: opacity 0.3s;
+}
+
+.mode-toggle-button::after {
+    content: "Switch Mode";
+    display: none;
+    position: absolute;
+    top: calc(-100% - 5px); /* Position above the button */
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #000;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 5px;
+    white-space: nowrap; /* Ensure text appears in one line */
+}
+
+.mode-toggle-button:hover::after {
+    display: block;
+    opacity: 1;
+}
+
+
+.mode-toggle-button1 {
+    background-color: transparent;
+    background-image: url('img/Power Button.png');
+    background-repeat: no-repeat;
+    background-size: contain;
+    width: 30px;
+    height: 30px;
+    /* Adjust position as needed */
+    position: absolute;
+    top: 810px;
+    right: 205px;
+}
+
+.mode-toggle-button1::after {
+    content: "Power";
+    display: none;
+    position: absolute;
+    top: calc(-100% - 5px); /* Position above the button */
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #000;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 5px;
+    white-space: nowrap; /* Ensure text appears in one line */
+}
+
+.mode-toggle-button1:hover::after {
+    display: block;
+    opacity: 1;
+}
+
+.grayed-out {
+  opacity: 0.5;
+  pointer-events: none;
+}
+  

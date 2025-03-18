@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="">
+  <head>
+    <title>Honey OS</title>
+    <link rel="stylesheet" type="text/css" href="styles.css" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
+  </head>
+  <body>
+    <!-- <img src="img/Group 19.png" alt="Honey OS Logo" class="logo1"> -->
+
+    <!-- hexagonbackground -->
+    <div id="hexagon-container7"></div>
+
+
+    <!-- drawer -->
+    <div id="drawer" class="drawer">
+      <button class= "mode-toggle-button" id="mode-toggle-button" onclick="toggleMode()"></button>
+      <button class= "mode-toggle-button1" id="shutdown-button" onclick="shutdown()"></button>
+
+    
+      <div class="voice-recognition">
+        <button id="voice-toggle" class="voice-toggle-with-image">
+          <div class="image-container"></div>
+          <span class="button-text"></span>
+        </button>
+        <div id="voice-message"></div>
+      </div>
+    
+
+      <div id="datetime" class="datetime">
+          <span id="time" class="time"></span>
+          <span id="date" class="date"></span>
+      </div>
+      <img src="img/Group 19.png" alt="Honey OS Logo" class="logo">
+    </div>
+
+    <!-- hexagons -->
+    <div class="hexagon-container1">
+      <div class="hexagon-wrapper1">
+        <div class="hexagon1"></div>
+      </div>
+      <div class="hexagon-wrapper1">
+        <div class="hexagon1"></div>
+      </div>
+      <div class="hexagon-wrapper1">
+        <div class="hexagon1"></div>
+      </div>
+      <div class="hexagon-wrapper1">
+        <div class="hexagon1"></div>
+      </div>
+    </div>
+
+    <div class="hexagon-container1-1">
+    <div class="hexagon-wrapper1">
+      <div class="hexagon1-1"></div>
+    </div>
+    </div>
+
+    <div class="hexagon-container">
+      
+      <div class="hexagon-wrapper">
+        <div class="hexagon">
+          <img src="img/Text Editor.png" alt="Text Editor" class="icon" />
+          <label>Text Editor</label>
+        </div>
+      </div>
+
+      <div class="hexagon-wrapper">
+        <div class="hexagon">
+          <img src="img/FileExplorer.png" alt="File Explorer" class="icon" />
+          <label>File Explorer</label>
+        </div>
+      </div>
+
+      <div class="hexagon-wrapper">
+        <div class="hexagon">
+          <img src="img/Image.png" alt="Camera" class="icon" />
+          <label class="iconCamera">Camera</label>
+        </div>
+      </div>
+
+      <div class="hexagon-wrapper">
+        <div class="hexagon">
+          <img src="img/Music.png" alt="Music Player" class="icon" />
+          <label>Music Player</label>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="hexagon-container2">
+      
+      <div class="hexagon-wrapper2">
+        <div class="hexagon2"></div>
+      </div>
+      <div class="hexagon-wrapper2">
+        <div class="hexagon2"></div>
+      </div>
+      <div class="hexagon-wrapper2">
+        <div class="hexagon2"></div>
+      </div>
+      <div class="hexagon-wrapper2">
+        <div class="hexagon2"></div>
+      </div>
+      <div class="hexagon-wrapper2">
+        <div class="hexagon2"></div>
+      </div>
+      <div class="hexagon-wrapper2">
+        <div class="hexagon2"></div>
+      </div>
+    </div>
+
+    <div class="hexagon-container2-1">
+      <div class="hexagon-wrapper2">
+        <div class="hexagon2-1"></div>
+      </div>
+    </div>
+
+    <div class="hexagon-container2-2">
+      <div class="hexagon-wrapper2">
+        <div class="hexagon2-2"></div>
+      </div>
+    </div>
+
+    <div class="hexagon-container3">
+      <div class="hexagon-wrapper3">
+        <div class="hexagon3"></div>
+      </div>
+      <div class="hexagon-wrapper3">
+        <div class="hexagon3"></div>
+      </div>
+      <div class="hexagon-wrapper3">
+        <div class="hexagon3"></div>
+      </div>
+      <div class="hexagon-wrapper3">
+        <div class="hexagon3"></div>
+      </div>
+    </div>
+
+    <div class="hexagon-container4">
+      <div class="hexagon-wrapper4">
+        <div class="hexagon4"></div>
+      </div>
+      <div class="hexagon-wrapper4">
+        <div class="hexagon4"></div>
+      </div>
+    </div>
+
+    <div class="hexagon-container4-1">
+      <div class="hexagon-wrapper4">
+        <div class="hexagon4-1"></div>
+      </div>
+    </div>
+
+    <div class="hexagon-container4-2">
+      <div class="hexagon-wrapper4">
+        <div class="hexagon4-2"></div>
+      </div>
+    </div>
+
+    <div class="hexagon-container5">
+      <div class="hexagon-wrapper5">
+        <div class="hexagon5"></div>
+      </div>
+      <div class="hexagon-wrapper5">
+        <div class="hexagon5"></div>
+      </div>
+      <div class="hexagon-wrapper5">
+        <div class="hexagon5"></div>
+      </div>
+    </div>
+
+    <div class="hexagon-container5-1">
+      <div class="hexagon-wrapper5">
+        <div class="hexagon5-1"></div>
+      </div>
+    </div>
+
+    <div class="hexagon-container5-2">
+      <div class="hexagon-wrapper5">
+        <div class="hexagon5-2"></div>
+      </div>
+    </div>
+
+    <div class="hexagon-container5-3">
+      <div class="hexagon-wrapper5">
+        <div class="hexagon5-3"></div>
+      </div>
+    </div>
+
+
+  
+   
+    <div class="hexagon-container6">
+      <div class="hexagon-wrapper6">
+        <div class="hexagon6"></div>
+      </div>
+      <div class="hexagon-wrapper6">
+        <div class="hexagon6"></div>
+      </div>
+      <div class="hexagon-wrapper6">
+        <div class="hexagon6"></div>
+      </div>
+      <div class="hexagon-wrapper6">
+        <div class="hexagon6"></div>
+      </div>
+    </div>
+
+    <div class="hexagon-container6-2">
+      <div class="hexagon-wrapper6">
+        <div class="hexagon6-2"></div>
+      </div>
+      </div>
+
+    <div class="hexagon-container6-1">
+      <div class="hexagon-wrapper6-1">
+        <div class="hexagon6-1">H</div>
+      </div>
+      <div class="hexagon-wrapper6-1">
+        <div class="hexagon6-1">O</div>
+      </div>
+      <div class="hexagon-wrapper6-1">
+        <div class="hexagon6-1">N</div>
+      </div>
+      <div class="hexagon-wrapper6-1">
+        <div class="hexagon6-1">E</div>
+      </div>
+      <div class="hexagon-wrapper6-1">
+        <div class="hexagon6-1">Y</div>
+      </div>
+    </div>
+
+    <div class="hexagon-container8">
+      <div class="hexagon-wrapper8">
+        <div class="hexagon8"></div>
+      </div>
+      <div class="hexagon-wrapper8">
+        <div class="hexagon8"></div>
+      </div>
+      <div class="hexagon-wrapper8">
+        <div class="hexagon8"></div>
+      </div>
+      <div class="hexagon-wrapper8">
+        <div class="hexagon8"></div>
+      </div>
+    </div>
+
+    <div class="hexagon-container8-1">
+      <div class="hexagon-wrapper8-1">
+        <div class="hexagon8-1">O</div>
+      </div>
+      <div class="hexagon-wrapper8-1">
+        <div class="hexagon8-1">S</div>
+      </div>
+    </div>
+
+    <div class="hexagon-container9">
+      <div class="hexagon-wrapper9">
+        <div class="hexagon9"></div>
+      </div>
+      <div class="hexagon-wrapper9">
+        <div class="hexagon9"></div>
+      </div>
+      <div class="hexagon-wrapper9">
+        <div class="hexagon9"></div>
+      </div>
+      <div class="hexagon-wrapper9">
+        <div class="hexagon9"></div>
+      </div>
+    </div>
+
+    <div class="hexagon-container9-1">
+      <div class="hexagon-wrapper9">
+        <div class="hexagon9-1"></div>
+      </div>
+    </div>
+
+    <div class="hexagon-container9-2">
+      <div class="hexagon-wrapper9">
+        <div class="hexagon9-2"></div>
+      </div>
+      <div class="hexagon-wrapper9">
+        <div class="hexagon9-2"></div>
+      </div>
+    </div>
+
+    <div class="hexagon-container9-3">
+      <div class="hexagon-wrapper9">
+        <div class="hexagon9-3"></div>
+      </div>
+    </div>
+    
+    <div class="hexagon-container10">
+      <div class="hexagon-wrapper10">
+        <div class="hexagon10"></div>
+      </div>
+      <div class="hexagon-wrapper10">
+        <div class="hexagon10"></div>
+      </div>
+      <div class="hexagon-wrapper10">
+        <div class="hexagon10"></div>
+      </div>
+    </div>
+
+    <div class="hexagon-container10-1">
+      <div class="hexagon-wrapper10">
+        <div class="hexagon10-1"></div>
+      </div>
+    </div>
+    
+
+    <div id="editor-container" class="hidden">
+      <div id="editor-header">
+        <div id="editor-headerIcons">
+        
+          <div>
+            <img
+              src="img/logo.png"
+              alt="Honey OS Logo"
+              class="editor-iconLOGO"
+            />
+            </div>
+  
+          <div class="label">
+          <img
+            src="img/NewFile.png"
+            alt="New File"
+            class="editor-icon"
+            id="new-file"
+          />
+          <label>New File</label>
+
+          </div>
+
+          <div class="label">
+          <img
+            src="img/OpenFolder.png"
+            alt="Open File"
+            class="editor-iconOPEN"
+            id="open-file"
+          />
+          <label>Open File</label>
+          </div>
+
+          <div class="label">
+          <img
+            src="img/SaveFile.png"
+            alt="Save File"
+            class="editor-icon"
+            id="save-file"
+          />
+          <label>Save File</label>
+          </div>
+
+         <div class="label">
+          <img
+            src="img/SaveAs.png"
+            alt="Save the File As"
+            class="editor-icon"
+            id="save-file-as"
+          />
+          <label>Save the File As</label>
+         </div>
+
+         <div class="label">
+          <img
+            src="img/Undo.png"
+            alt="Save File"
+            class="editor-iconARROW"
+            id="undo"
+          />
+          <label>Undo</label>
+        </div>
+
+        <div class="label">
+          <img
+            src="img/Redo.png"
+            alt="Save File"
+            class="editor-iconARROW"
+            id="redo"
+          />
+          <label>Redo</label>
+        </div>
+
+          <div class="label">
+          <img
+            src="img/Microphone.png"
+            alt="Save File"
+            class="editor-icon"
+            id="micButton"
+          />
+          <label>Microphone</label>
+        </div>
+        </div>
+
+        <div id="editor-headerIcons2">
+          <img
+          src="img/Minimize.png"
+          alt="Minimize"
+          class="editor-icon2"
+          id="minimize"
+        />
+          <img
+            src="img/Maximize.png"
+            alt="Maximize"
+            class="editor-icon2"
+            id="max"
+          />
+
+          <img
+          src="img/Close.png"
+          alt="Close File"
+          class="editor-icon2"
+          id="close-file"
+        />
+        </div>
+      </div>
+
+      <textarea id="code-editor"></textarea>
+    </div>
+
+    <div id="taskbar" class="hidden">
+      <div class="iconPosition">
+      
+        <div id="editor-task">
+        <img src="img/Text Editor.png" alt="New File" class="taskbaricon" />
+        </div>
+
+        <div id="editor-task">
+          <img src="img/FileExplorer.png" alt="Open File" class="taskbaricon" />
+        </div>
+
+        <div id="editor-task">
+          <img src="img/Image.png" alt="New File" class="taskbaricon" />
+        </div>
+
+        <div id="editor-task">
+          <img src="img/Music.png" alt="New File" class="taskbaricon" />
+        </div>
+    </div>
+    </div>
+  
+    <div id="music-player-container" class="hidden">
+      <div class="player">
+        <div class="details">
+          <div class="now-playing">PLAYING x OF y</div>
+          <div class="track-art"></div>
+          <div class="track-name">Track Name</div>
+          <div class="track-artist">Track Artist</div>
+        </div>
+        <div class="buttons">
+          <div class="prev-track" onclick="prevTrack()"><i class="fa fa-step-backward fa-2x"></i></div>
+          <div class="playpause-track" onclick="playpauseTrack()"><i class="fa fa-play-circle fa-5x"></i></div>
+          <div class="next-track" onclick="nextTrack()"><i class="fa fa-step-forward fa-2x"></i></div>
+        </div>
+        <div class="slider_container">
+          <div class="current-time">00:00</div>
+          <input type="range" min="1" max="100" value="0" class="seek_slider" onchange="seekTo()">
+          <div class="total-duration">00:00</div>
+        </div>
+        <div class="slider_container">
+          <i class="fa fa-volume-down"></i>
+          <input type="range" min="1" max="100" value="99" class="volume_slider" onchange="setVolume()">
+          <i class="fa fa-volume-up"></i>
+        </div>
+        <div class="close-btn" onclick="closeMusicPlayer()"><i class="fa fa-times"></i></div>
+      </div>
+    </div>
+    
+    <script src="js/neutralino.js"></script>
+    <script src="js/voice.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/speechToText.js"></script>
+    <script src="js/drawer.js"></script>
+    <script src="js/hex.js"></script>
+    <script src="js/Time&Date.js"></script>
+    <script src="js/Battery.js"></script>
+    
+        </body>
+</html>
