@@ -15,7 +15,7 @@ The default template for a Neutralinojs app. It's possible to use your favorite 
 - `trayIcon.png` - Made by [Freepik](https://www.freepik.com) and downloaded from [Flaticon](https://www.flaticon.com)
 
 
-#How to Run
+## How to Run
 1. Extract zip or clone the github repository
 2. Open with VSCode
 3. Run 'npm install -g @neutralinojs/neu' command on terminal
