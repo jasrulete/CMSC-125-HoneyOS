@@ -92,3 +92,12 @@ INFO 2025-03-14 10:37:07,705 Auth info was exported to ./.tmp/auth_info.json api
 ERROR 2025-03-14 10:37:09,601 NE_RS_UNBLDRE: Unable to load application resource file /resources/favicon.ico api\debug\debug.cpp:20 GIGABYTE@HELLO
 ERROR 2025-03-14 10:37:21,154 NE_RS_UNBLDRE: Unable to load application resource file /resources/js/speechToText.js api\debug\debug.cpp:20 GIGABYTE@HELLO
 
+INFO 2025-04-08 11:30:56,819 Auth info was exported to ./.tmp/auth_info.json api\debug\debug.cpp:17 Anton@MSI
+ERROR 2025-04-08 11:30:58,560 NE_RS_UNBLDRE: Unable to load application resource file /resources/favicon.ico api\debug\debug.cpp:20 Anton@MSI
+ERROR 2025-04-08 11:31:10,149 NE_RS_UNBLDRE: Unable to load application resource file /resources/js/speechToText.js api\debug\debug.cpp:20 Anton@MSI
+INFO 2025-04-08 11:32:52,671 Auth info was exported to ./.tmp/auth_info.json api\debug\debug.cpp:17 Anton@MSI
+ERROR 2025-04-08 11:32:54,302 NE_RS_UNBLDRE: Unable to load application resource file /resources/favicon.ico api\debug\debug.cpp:20 Anton@MSI
+ERROR 2025-04-08 11:33:05,887 NE_RS_UNBLDRE: Unable to load application resource file /resources/js/speechToText.js api\debug\debug.cpp:20 Anton@MSI
+INFO 2025-04-08 11:35:53,410 Auth info was exported to ./.tmp/auth_info.json api\debug\debug.cpp:17 Anton@MSI
+ERROR 2025-04-08 11:35:55,181 NE_RS_UNBLDRE: Unable to load application resource file /resources/favicon.ico api\debug\debug.cpp:20 Anton@MSI
+ERROR 2025-04-08 11:36:06,737 NE_RS_UNBLDRE: Unable to load application resource file /resources/js/speechToText.js api\debug\debug.cpp:20 Anton@MSI

@@ -311,12 +311,15 @@ function visualizeAudio() {
 function stopAudioVisualization() {
   if (animationFrameId) {
     cancelAnimationFrame(animationFrameId);
+    animationFrameId = null;
   }
   if (microphone) {
     microphone.disconnect();
+    microphone = null;
   }
   if (audioContext) {
     audioContext.close();
+    audioContext = null;
   }
   const bars = document.querySelectorAll('#audio-visualizer .bar');
   bars.forEach(bar => {
@@ -373,8 +376,9 @@ function stopVoiceRecognition() {
   if (recognition) {
     recognition.stop();
     recognition = null;
+    displayMessage("Voice recognition stopped");
+    stopAudioVisualization();
   }
-  stopAudioVisualization();
 }
 
 // Function to enable speech-to-text
@@ -447,7 +451,9 @@ function toggleVoiceRecognition() {
 // Function to display a message
 function displayMessage(message) {
   const messageElement = document.getElementById("voice-message");
-  messageElement.textContent = message;
+  if (messageElement) {
+    messageElement.textContent = message;
+  }
 }
 
 // Function to play a sound
