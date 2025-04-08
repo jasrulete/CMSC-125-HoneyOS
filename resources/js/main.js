@@ -569,18 +569,65 @@ function openCamera() {
           canvas.width = videoElement.videoWidth;
           canvas.height = videoElement.videoHeight;
           var context = canvas.getContext("2d");
-          context.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
+      
+          if (videoElement.readyState === videoElement.HAVE_ENOUGH_DATA) {
+            context.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
 
-          canvas.toBlob(async function (blob) {
-            const fileName = `C:\\Users\\Anton\\Desktop\\UP\\3rd Yr 2nd Sem\\CMSC 125\\Images\\capture_${Date.now()}.png`; // Edit this path to change the save location and file name format
-            await Neutralino.filesystem.writeBinaryFile(fileName, blob);
+            canvas.toBlob(async function (blob) {
+              if (!blob || blob.size === 0) {
+                console.error("Invalid or empty Blob created.");
+                return;
+              }
 
-            smallPreviewImage.src = URL.createObjectURL(blob);
-            smallPreviewImage.style.display = "block";
+              try {
+                // Convert Blob to Uint8Array
+                const arrayBuffer = await blob.arrayBuffer();
+                const uint8Array = new Uint8Array(arrayBuffer);
 
-            // Update the previewImage src as well
-            previewImage.src = URL.createObjectURL(blob);
-          }, "image/png");
+                // Change Directory Path to personal picure directory in local machine
+                const dirPath = "C:/Temp/camPics";
+
+                // Create directory if it doesn't exist
+                try {
+                  const stats = await Neutralino.filesystem.getStats(dirPath);
+                  if (!stats.isDirectory) {
+                    throw new Error("Path exists but is not a directory.");
+                  }
+                  console.log("Directory already exists.");
+                  // console.log("Attempting to create directory:", dirPath);
+                  // await Neutralino.filesystem.createDirectory(dirPath);
+                  // console.log("Directory created successfully.");
+                } catch (dirError) {
+                  if (error.code === "NE_FS_NOPATHE") {
+                    console.log("Directory does not exist. Creating...");
+                    await Neutralino.filesystem.createDirectory(dirPath);
+                  } else {
+                    throw error;
+                  }
+                }
+
+                const fileName = `${dirPath}/capture_${Date.now()}.png`;
+                await Neutralino.filesystem.writeBinaryFile(
+                  fileName,
+                  uint8Array
+                );
+                console.log("Image saved successfully:", fileName);
+              } catch (error) {
+                console.error("Failed to save image:", error);
+                alert(`Failed to save image: ${error.message}`);
+              }
+
+              // Update preview images
+              smallPreviewImage.src = URL.createObjectURL(blob);
+              smallPreviewImage.style.display = "block";
+              previewImage.src = URL.createObjectURL(blob);
+            }, "image/png");
+          } else {
+            console.error(
+              "Video element does not have enough data to capture."
+            );
+          }
+
         });
 
         smallPreviewImage.addEventListener("click", function () {
