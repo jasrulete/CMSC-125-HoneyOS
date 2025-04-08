@@ -22,11 +22,6 @@
       "value2": {}
     }
   },
-  "permissions": {
-    "filesystem": {
-      "write": ["C:/Temp/camPics"]
-    }
-  },
   "modes": {
     "window": {
       "title": "Honey OS",
