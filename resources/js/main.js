@@ -572,7 +572,7 @@ function openCamera() {
           context.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
 
           canvas.toBlob(async function (blob) {
-            const fileName = `C:\\@JERIC\\@Docs\\@Third Year (2024 - 2025)\\2nd Sem\\@Assignment\\CMSC 125\\Group 5B\\HoneyOs_Phase-1\\Honey-Os-Phase-1-main\\resources\\pictures\\capture_${Date.now()}.png`; // Edit this path to change the save location and file name format
+            const fileName = `C:\\Users\\Anton\\Desktop\\UP\\3rd Yr 2nd Sem\\CMSC 125\\Images\\capture_${Date.now()}.png`; // Edit this path to change the save location and file name format
             await Neutralino.filesystem.writeBinaryFile(fileName, blob);
 
             smallPreviewImage.src = URL.createObjectURL(blob);
