@@ -340,6 +340,7 @@ function startVoiceRecognition() {
     displayMessage("Listening...");
     playSound("sfx/start-sound.mp3");
     initAudioVisualization();
+    updateMicrophoneImage(true);
   };
 
   recognition.onresult = function (event) {
@@ -360,6 +361,7 @@ function startVoiceRecognition() {
   recognition.onerror = function (event) {
     console.error("Voice recognition error:", event.error);
     displayMessage("Voice recognition for commands is stopped.");
+    updateMicrophoneImage(false);
     // playSound("sfx/error-sound.mp3");
   };
 
@@ -378,6 +380,7 @@ function stopVoiceRecognition() {
     recognition = null;
     displayMessage("Voice recognition stopped");
     stopAudioVisualization();
+    updateMicrophoneImage(false);
   }
 }
 
@@ -388,6 +391,12 @@ function enableSpeechToText() {
     recognition.continuous = true;
     recognition.interimResults = false;
     recognition.lang = "en-US";
+
+    // Update the microphone image in the editor
+    const micButton = document.getElementById("micButton");
+    if (micButton) {
+      micButton.src = "img/Microphone_On.png";
+    }
 
     recognition.onresult = function (event) {
       var result = event.results[event.results.length - 1][0].transcript + " ";
@@ -403,12 +412,22 @@ function enableSpeechToText() {
     recognition.onerror = function (event) {
       console.error("Speech recognition error:", event.error);
       displayMessage("Speech recognition stopped.");
+      // Reset microphone image
+      const micButton = document.getElementById("micButton");
+      if (micButton) {
+        micButton.src = "img/Microphone_Off.png";
+      }
       // playSound("sfx/error-sound.mp3");
       stopSpeechToText(); // Stop speech-to-text on error
     };
 
     recognition.onend = function () {
       console.log("Speech recognition ended.");
+      // Reset microphone image when recognition ends
+      const micButton = document.getElementById("micButton");
+      if (micButton) {
+        micButton.src = "img/Microphone_Off.png";
+      }
       // Restart speech-to-text if it's not explicitly stopped
       if (recognition) {
         recognition.start();
@@ -427,12 +446,23 @@ function stopSpeechToText() {
   if (recognition) {
     recognition.stop();
     recognition = null;
+    
+    // Reset microphone image
+    const micButton = document.getElementById("micButton");
+    if (micButton) {
+      micButton.src = "img/Microphone_Off.png";
+    }
   }
 }
 
-document
-  .getElementById("micButton")
-  .addEventListener("click", enableSpeechToText);
+// Add a toggling functionality to the mic button
+document.getElementById("micButton").addEventListener("click", function() {
+  if (recognition) {
+    stopSpeechToText();
+  } else {
+    enableSpeechToText();
+  }
+});
 
 // Function to toggle voice recognition
 function toggleVoiceRecognition() {
@@ -470,7 +500,25 @@ function speakText(text) {
     keepAliveOnThreadDetach: true,
   });
 }
+
+// Function to update the microphone image based on listening state
+function updateMicrophoneImage(isListening) {
+  const voiceToggleButton = document.getElementById("voice-toggle");
+  if (voiceToggleButton) {
+    if (isListening) {
+      voiceToggleButton.style.backgroundImage = "url('img/Microphone_On.png')";
+    } else {
+      voiceToggleButton.style.backgroundImage = "url('img/Microphone_Off.png')";
+    }
+  }
+}
+
 // Add event listener to the voice recognition toggle button
 document
   .getElementById("voice-toggle")
   .addEventListener("click", toggleVoiceRecognition);
+
+// Initialize the microphone image when the page loads
+document.addEventListener("DOMContentLoaded", function() {
+  updateMicrophoneImage(false); // Set initial state to not listening
+});

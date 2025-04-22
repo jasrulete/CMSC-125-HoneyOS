@@ -775,7 +775,7 @@ body {
   border-radius: 5px;
   cursor: pointer;
   /* Add the background image */
-  background-image: url("img/VoiceCom.png");
+  background-image: url("img/Microphone_Off.png");
   background-size: contain; /* Adjust the size of the background image */
   background-repeat: no-repeat; /* Prevent repeating of the background image */
   background-position: center; /* Center the background image */
