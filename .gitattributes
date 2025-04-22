@@ -1,0 +1,20 @@
+# Set default behavior to automatically normalize line endings
+* text=auto
+
+# Specify files that should use binary merge (avoid text merging)
+resources/styles.css merge=ours
+
+# Ignore specific sections in CSS files during merges
+resources/styles.css filter=cssmerge
+
+# Ignore changes to specific microphone styles
+resources/img/Microphone*.png binary
+
+# Declare files as binary to avoid merge conflicts
+*.png binary
+*.jpg binary
+*.gif binary
+
+# Ignore log files in merges
+neutralinojs.log merge=ours
+*.log merge=ours 
