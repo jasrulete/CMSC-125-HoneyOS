@@ -775,7 +775,7 @@ body {
   border-radius: 5px;
   cursor: pointer;
   /* Add the background image */
-  background-image: url("img/VoiceCom.png");
+  background-image: url("img/Microphone_Off.png");
   background-size: contain; /* Adjust the size of the background image */
   background-repeat: no-repeat; /* Prevent repeating of the background image */
   background-position: center; /* Center the background image */
@@ -838,6 +838,14 @@ body {
   height: 30px;
   margin-right: 8px;
   cursor: pointer;
+}
+
+/* Specific style for microphone icon to match other icons */
+#micButton {
+  width: 30px;
+  height: 30px;
+  transform: scale(1.15, 1.3); /* Scale more vertically (y-axis) than horizontally (x-axis) */
+  transform-origin: center; /* Scale from the center */
 }
 
 .editor-iconLOGO {
