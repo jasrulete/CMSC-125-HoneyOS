@@ -1,9 +1,5 @@
 // voice.js
 let recognition;
-let audioContext;
-let analyser;
-let microphone;
-let animationFrameId;
 
 // Function to handle the voice commands
 function handleVoiceCommand(command) {
@@ -256,90 +252,18 @@ function handleVoiceCommand(command) {
   }
 }
 
-// Function to initialize audio visualization
-function initAudioVisualization() {
-  audioContext = new (window.AudioContext || window.webkitAudioContext)();
-  analyser = audioContext.createAnalyser();
-  analyser.fftSize = 256;
-  
-  navigator.mediaDevices.getUserMedia({ audio: true })
-    .then(stream => {
-      microphone = audioContext.createMediaStreamSource(stream);
-      microphone.connect(analyser);
-      visualizeAudio();
-    })
-    .catch(err => {
-      console.error('Error accessing microphone:', err);
-    });
-}
-
-// Function to visualize audio
-function visualizeAudio() {
-  const bufferLength = analyser.frequencyBinCount;
-  const dataArray = new Uint8Array(bufferLength);
-  
-  function draw() {
-    animationFrameId = requestAnimationFrame(draw);
-    analyser.getByteFrequencyData(dataArray);
-    
-    const bars = document.querySelectorAll('#audio-visualizer .bar');
-    if (!bars.length) return;
-
-    // Get frequency data for different ranges
-    const barCount = bars.length;
-    const step = Math.floor(bufferLength / barCount);
-    
-    bars.forEach((bar, index) => {
-      // Get average frequency for this bar's range
-      let sum = 0;
-      const start = index * step;
-      for (let i = 0; i < step; i++) {
-        sum += dataArray[start + i];
-      }
-      const average = sum / step;
-      
-      // Map the average to a height between 2px and 50px
-      const height = Math.max(2, Math.min(50, (average / 128) * 50));
-      bar.style.height = `${height}px`;
-    });
-  }
-  
-  draw();
-}
-
-// Function to stop audio visualization
-function stopAudioVisualization() {
-  if (animationFrameId) {
-    cancelAnimationFrame(animationFrameId);
-    animationFrameId = null;
-  }
-  if (microphone) {
-    microphone.disconnect();
-    microphone = null;
-  }
-  if (audioContext) {
-    audioContext.close();
-    audioContext = null;
-  }
-  const bars = document.querySelectorAll('#audio-visualizer .bar');
-  bars.forEach(bar => {
-    bar.style.height = '2px';
-  });
-}
-
 // Function to start voice recognition
 function startVoiceRecognition() {
   recognition = new webkitSpeechRecognition();
   recognition.lang = "en-US";
   recognition.interimResults = true;
   recognition.maxAlternatives = 1;
-  recognition.continuous = true;
+  recognition.continuous = true; // Set continuous to true
 
   recognition.onstart = function () {
     console.log("Voice recognition started.");
     displayMessage("Listening...");
     playSound("sfx/start-sound.mp3");
-    initAudioVisualization();
   };
 
   recognition.onresult = function (event) {
@@ -376,8 +300,6 @@ function stopVoiceRecognition() {
   if (recognition) {
     recognition.stop();
     recognition = null;
-    displayMessage("Voice recognition stopped");
-    stopAudioVisualization();
   }
 }
 
@@ -451,9 +373,7 @@ function toggleVoiceRecognition() {
 // Function to display a message
 function displayMessage(message) {
   const messageElement = document.getElementById("voice-message");
-  if (messageElement) {
-    messageElement.textContent = message;
-  }
+  messageElement.textContent = message;
 }
 
 // Function to play a sound

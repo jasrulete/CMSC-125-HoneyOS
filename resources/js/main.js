@@ -49,6 +49,128 @@ document.addEventListener("DOMContentLoaded", function () {
 
   const editorTask = document.getElementById("editor-task");
   editorTask.addEventListener("click", toggleEditor);
+
+  // --- Add this block to enable resizing ---
+  const container = document.getElementById("editor-container");
+
+  let isResizing = false;
+  let currentEdge = null;
+  let startX, startY;
+  let startWidth, startHeight;
+  let startLeft, startTop;
+  
+  const MIN_WIDTH = 300;
+  const MIN_HEIGHT = 200;
+  const EDGE_THRESHOLD = 10;
+  
+  // Detect edges for resizing
+  container.addEventListener("mousemove", (e) => {
+    if (isResizing) return;
+  
+    const rect = container.getBoundingClientRect();
+    const offsetX = e.clientX - rect.left;
+    const offsetY = e.clientY - rect.top;
+  
+    container.classList.remove(
+      "edge-top", "edge-bottom", "edge-left", "edge-right",
+      "edge-top-left", "edge-top-right", "edge-bottom-left", "edge-bottom-right"
+    );
+  
+    let edge = null;
+    const onLeft = offsetX < EDGE_THRESHOLD;
+    const onRight = offsetX > rect.width - EDGE_THRESHOLD;
+    const onTop = offsetY < EDGE_THRESHOLD;
+    const onBottom = offsetY > rect.height - EDGE_THRESHOLD;
+  
+    if (onTop && onLeft) edge = "top-left";
+    else if (onTop && onRight) edge = "top-right";
+    else if (onBottom && onLeft) edge = "bottom-left";
+    else if (onBottom && onRight) edge = "bottom-right";
+    else if (onTop) edge = "top";
+    else if (onBottom) edge = "bottom";
+    else if (onLeft) edge = "left";
+    else if (onRight) edge = "right";
+  
+    if (edge) {
+      container.classList.add("edge-" + edge);
+      currentEdge = edge;
+    } else {
+      currentEdge = null;
+    }
+  });
+  
+  // Start resizing
+  container.addEventListener("mousedown", (e) => {
+    if (!currentEdge) return;
+  
+    e.preventDefault();
+    e.stopPropagation(); // 🛑 Prevents triggering dragging
+  
+    isResizing = true;
+  
+    const styles = window.getComputedStyle(container);
+    startX = e.clientX;
+    startY = e.clientY;
+    startWidth = parseFloat(styles.width);
+    startHeight = parseFloat(styles.height);
+    startLeft = parseFloat(styles.left);
+    startTop = parseFloat(styles.top);
+  
+    document.addEventListener("mousemove", onResize);
+    document.addEventListener("mouseup", stopResize);
+    document.getElementById("editor-header").addEventListener("mousedown", startDragging);
+  });
+  
+  // Resize logic
+  function onResize(e) {
+    if (!isResizing) return;
+  
+    const dx = e.clientX - startX;
+    const dy = e.clientY - startY;
+  
+    let newWidth = startWidth;
+    let newHeight = startHeight;
+    let newLeft = startLeft;
+    let newTop = startTop;
+  
+    // Right edge
+    if (currentEdge.includes("right")) {
+      newWidth = Math.max(MIN_WIDTH, startWidth + dx);
+      container.style.width = newWidth + "px";
+    }
+  
+    // Bottom edge
+    if (currentEdge.includes("bottom")) {
+      newHeight = Math.max(MIN_HEIGHT, startHeight + dy);
+      container.style.height = newHeight + "px";
+    }
+  
+    // Left edge
+    if (currentEdge.includes("left")) {
+      const proposedWidth = startWidth - dx;
+      if (proposedWidth > MIN_WIDTH) {
+        container.style.width = proposedWidth + "px";
+        container.style.left = (startLeft + dx) + "px";
+      }
+    }
+  
+    // Top edge
+    if (currentEdge.includes("top")) {
+      const proposedHeight = startHeight - dy;
+      if (proposedHeight > MIN_HEIGHT) {
+        container.style.height = proposedHeight + "px";
+        container.style.top = (startTop + dy) + "px";
+      }
+    }
+  }
+  
+  // Stop resizing
+  function stopResize() {
+    isResizing = false;
+    currentEdge = null;
+    document.removeEventListener("mousemove", onResize);
+    document.removeEventListener("mouseup", stopResize);
+  }
 });
 
 function toggleEditor() {
@@ -569,65 +691,18 @@ function openCamera() {
           canvas.width = videoElement.videoWidth;
           canvas.height = videoElement.videoHeight;
           var context = canvas.getContext("2d");
-      
-          if (videoElement.readyState === videoElement.HAVE_ENOUGH_DATA) {
-            context.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
+          context.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
 
-            canvas.toBlob(async function (blob) {
-              if (!blob || blob.size === 0) {
-                console.error("Invalid or empty Blob created.");
-                return;
-              }
+          canvas.toBlob(async function (blob) {
+            const fileName = `C:\\@JERIC\\@Docs\\@Third Year (2024 - 2025)\\2nd Sem\\@Assignment\\CMSC 125\\Group 5B\\HoneyOs_Phase-1\\Honey-Os-Phase-1-main\\resources\\pictures\\capture_${Date.now()}.png`; // Edit this path to change the save location and file name format
+            await Neutralino.filesystem.writeBinaryFile(fileName, blob);
 
-              try {
-                // Convert Blob to Uint8Array
-                const arrayBuffer = await blob.arrayBuffer();
-                const uint8Array = new Uint8Array(arrayBuffer);
+            smallPreviewImage.src = URL.createObjectURL(blob);
+            smallPreviewImage.style.display = "block";
 
-                // Change Directory Path to personal picure directory in local machine
-                const dirPath = "C:/Temp/camPics";
-
-                // Create directory if it doesn't exist
-                try {
-                  const stats = await Neutralino.filesystem.getStats(dirPath);
-                  if (!stats.isDirectory) {
-                    throw new Error("Path exists but is not a directory.");
-                  }
-                  console.log("Directory already exists.");
-                  // console.log("Attempting to create directory:", dirPath);
-                  // await Neutralino.filesystem.createDirectory(dirPath);
-                  // console.log("Directory created successfully.");
-                } catch (dirError) {
-                  if (error.code === "NE_FS_NOPATHE") {
-                    console.log("Directory does not exist. Creating...");
-                    await Neutralino.filesystem.createDirectory(dirPath);
-                  } else {
-                    throw error;
-                  }
-                }
-
-                const fileName = `${dirPath}/capture_${Date.now()}.png`;
-                await Neutralino.filesystem.writeBinaryFile(
-                  fileName,
-                  uint8Array
-                );
-                console.log("Image saved successfully:", fileName);
-              } catch (error) {
-                console.error("Failed to save image:", error);
-                alert(`Failed to save image: ${error.message}`);
-              }
-
-              // Update preview images
-              smallPreviewImage.src = URL.createObjectURL(blob);
-              smallPreviewImage.style.display = "block";
-              previewImage.src = URL.createObjectURL(blob);
-            }, "image/png");
-          } else {
-            console.error(
-              "Video element does not have enough data to capture."
-            );
-          }
-
+            // Update the previewImage src as well
+            previewImage.src = URL.createObjectURL(blob);
+          }, "image/png");
         });
 
         smallPreviewImage.addEventListener("click", function () {
