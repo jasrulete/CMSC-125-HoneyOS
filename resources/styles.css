@@ -1473,10 +1473,11 @@ i.fa-step-backward {
 
 .audio-visualizer .bar {
   width: 8px;
-  height: 2px;
+  height: 0px; /* Start with 0 height by default */
+  min-height: 0px; /* Allow bars to go completely to zero */
   background-color: #ffd700;
   border-radius: 2px;
-  transition: height 0.1s ease;
+  transition: height 0.15s ease-out; /* Smoother transition when reducing height */
   box-shadow: 0 0 5px rgba(255, 215, 0, 0.5);
 }
   

@@ -321,9 +321,10 @@ function stopAudioVisualization() {
     audioContext.close();
     audioContext = null;
   }
+  // Immediately reset all bars to zero height
   const bars = document.querySelectorAll('#audio-visualizer .bar');
   bars.forEach(bar => {
-    bar.style.height = '2px';
+    bar.style.height = '0px';
   });
 }
 
