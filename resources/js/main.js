@@ -680,6 +680,196 @@ function openCamera() {
   }
 }
 
+function arrayBufferToBase64(buffer) {
+  const bytes = new Uint8Array(buffer);
+  let binary = "";
+  for (let i = 0; i < bytes.byteLength; i++) {
+    binary += String.fromCharCode(bytes[i]);
+  }
+  return btoa(binary);
+}
+
+// Function to open the photo gallery
+async function openPhotoGallery() {
+  const dirPath = "C:/Temp/camPics";
+
+  try {
+    // Check if the directory exists
+    const stats = await Neutralino.filesystem.getStats(dirPath);
+    if (!stats.isDirectory) throw new Error("Invalid gallery path.");
+
+    // Read the directory contents
+    const entries = await Neutralino.filesystem.readDirectory(dirPath);
+    console.log("Files in directory:", entries); // Debugging: Log file list
+
+    // Filter out only image files
+    const imageFiles = entries.filter((file) => {
+      const ext = file.entry.split(".").pop().toLowerCase();
+      return (
+        file.type === "FILE" &&
+        ["png", "jpg", "jpeg", "gif", "bmp"].includes(ext)
+      );
+    });
+
+    if (imageFiles.length === 0) {
+      alert("No images found in the gallery.");
+      return;
+    }
+
+    const galleryContainer = document.createElement("div");
+    galleryContainer.id = "gallery-container";
+    Object.assign(galleryContainer.style, {
+      display: "flex",
+      flexWrap: "wrap",
+      justifyContent: "center",
+      alignItems: "flex-start",
+      gap: "15px",
+      padding: "20px",
+      backgroundColor: "rgba(255, 255, 255, 0.95)",
+      position: "fixed",
+      top: "0",
+      left: "0",
+      width: "100vw",
+      height: "100vh",
+      overflowY: "auto",
+      zIndex: "1000",
+    });
+
+    const closeBtn = document.createElement("button");
+    closeBtn.textContent = "Close Gallery";
+    Object.assign(closeBtn.style, {
+      position: "fixed",
+      top: "20px",
+      right: "20px",
+      padding: "10px 15px",
+      backgroundColor: "#f44336",
+      color: "white",
+      border: "none",
+      borderRadius: "5px",
+      cursor: "pointer",
+      zIndex: "1001",
+    });
+    closeBtn.onclick = () => document.body.removeChild(galleryContainer);
+    galleryContainer.appendChild(closeBtn);
+
+    for (const { entry } of imageFiles) {
+      const filePath = `${dirPath}/${entry}`;
+      try {
+        const arrayBuffer = await Neutralino.filesystem.readBinaryFile(
+          filePath
+        );
+        const base64 = arrayBufferToBase64(arrayBuffer); // ✅ Proper conversion
+
+        const extension = entry.split(".").pop().toLowerCase();
+        const mimeTypeMap = {
+          png: "image/png",
+          jpg: "image/jpeg",
+          jpeg: "image/jpeg",
+          gif: "image/gif",
+          bmp: "image/bmp",
+        };
+        const mimeType = mimeTypeMap[extension] || "image/png";
+
+        // Debugging logs
+        console.log(`📁 File: ${entry}`);
+        console.log(`🔠 MIME Type: ${mimeType}`);
+        console.log(`🧬 Base64 Snippet: ${base64.slice(0, 50)}...`);
+        console.log(
+          `🖼 Image SRC: data:${mimeType};base64,${base64.slice(0, 50)}...`
+        );
+
+        const img = document.createElement("img");
+        img.src = `data:${mimeType};base64,${base64}`;
+
+        Object.assign(img.style, {
+          width: "120px",
+          height: "90px",
+          objectFit: "cover",
+          cursor: "pointer",
+          border: "2px solid #ccc",
+          borderRadius: "4px",
+        });
+
+        img.alt = entry;
+        img.title = entry;
+        img.addEventListener("click", () => viewFullImage(img.src));
+        galleryContainer.appendChild(img);
+      } catch (err) {
+        console.error(`❌ Failed to load ${entry}:`, err);
+      }
+    }
+
+    document.body.appendChild(galleryContainer);
+  } catch (error) {
+    console.error("Photo gallery error:", error);
+    alert("Failed to open photo gallery: " + error.message);
+  }
+}
+
+// Function to view a full-size image
+function viewFullImage(imagePath) {
+  const overlay = document.createElement("div");
+  Object.assign(overlay.style, {
+    position: "fixed",
+    top: 0,
+    left: 0,
+    width: "100vw",
+    height: "100vh",
+    backgroundColor: "rgba(0, 0, 0, 0.85)",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    zIndex: 1002,
+  });
+
+  const img = document.createElement("img");
+  img.src = imagePath;
+  img.alt = "Full view";
+  Object.assign(img.style, {
+    maxWidth: "90%",
+    maxHeight: "90%",
+    border: "4px solid white",
+    borderRadius: "8px",
+    boxShadow: "0 0 20px rgba(0,0,0,0.7)",
+  });
+
+  const closeBtn = document.createElement("button");
+  closeBtn.textContent = "×";
+  Object.assign(closeBtn.style, {
+    position: "absolute",
+    top: "20px",
+    right: "20px",
+    fontSize: "32px",
+    color: "white",
+    background: "none",
+    border: "none",
+    cursor: "pointer",
+    zIndex: "1003",
+  });
+  closeBtn.onclick = () => document.body.removeChild(overlay);
+
+  overlay.appendChild(img);
+  overlay.appendChild(closeBtn);
+  document.body.appendChild(overlay);
+}
+
+// Add a button to open the photo gallery
+const galleryButton = document.createElement("button");
+galleryButton.innerText = "Open Photo Gallery";
+galleryButton.style.position = "fixed";
+galleryButton.style.bottom = "20px";
+galleryButton.style.right = "20px";
+galleryButton.style.padding = "10px";
+galleryButton.style.backgroundColor = "#007bff";
+galleryButton.style.color = "white";
+galleryButton.style.border = "none";
+galleryButton.style.borderRadius = "5px";
+galleryButton.style.cursor = "pointer";
+
+galleryButton.addEventListener("click", openPhotoGallery);
+
+document.body.appendChild(galleryButton);
+
 async function shutdown() {
   if (codeEditor || camera) {
     const alertMessage = "Some tabs are open. Close them first.";
