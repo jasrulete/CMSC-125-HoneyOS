@@ -691,18 +691,65 @@ function openCamera() {
           canvas.width = videoElement.videoWidth;
           canvas.height = videoElement.videoHeight;
           var context = canvas.getContext("2d");
-          context.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
+      
+          if (videoElement.readyState === videoElement.HAVE_ENOUGH_DATA) {
+            context.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
 
-          canvas.toBlob(async function (blob) {
-            const fileName = `C:\\@JERIC\\@Docs\\@Third Year (2024 - 2025)\\2nd Sem\\@Assignment\\CMSC 125\\Group 5B\\HoneyOs_Phase-1\\Honey-Os-Phase-1-main\\resources\\pictures\\capture_${Date.now()}.png`; // Edit this path to change the save location and file name format
-            await Neutralino.filesystem.writeBinaryFile(fileName, blob);
+            canvas.toBlob(async function (blob) {
+              if (!blob || blob.size === 0) {
+                console.error("Invalid or empty Blob created.");
+                return;
+              }
 
-            smallPreviewImage.src = URL.createObjectURL(blob);
-            smallPreviewImage.style.display = "block";
+              try {
+                // Convert Blob to Uint8Array
+                const arrayBuffer = await blob.arrayBuffer();
+                const uint8Array = new Uint8Array(arrayBuffer);
 
-            // Update the previewImage src as well
-            previewImage.src = URL.createObjectURL(blob);
-          }, "image/png");
+                // Change Directory Path to personal picure directory in local machine
+                const dirPath = "C:/Temp/camPics";
+
+                // Create directory if it doesn't exist
+                try {
+                  const stats = await Neutralino.filesystem.getStats(dirPath);
+                  if (!stats.isDirectory) {
+                    throw new Error("Path exists but is not a directory.");
+                  }
+                  console.log("Directory already exists.");
+                  // console.log("Attempting to create directory:", dirPath);
+                  // await Neutralino.filesystem.createDirectory(dirPath);
+                  // console.log("Directory created successfully.");
+                } catch (dirError) {
+                  if (error.code === "NE_FS_NOPATHE") {
+                    console.log("Directory does not exist. Creating...");
+                    await Neutralino.filesystem.createDirectory(dirPath);
+                  } else {
+                    throw error;
+                  }
+                }
+
+                const fileName = `${dirPath}/capture_${Date.now()}.png`;
+                await Neutralino.filesystem.writeBinaryFile(
+                  fileName,
+                  uint8Array
+                );
+                console.log("Image saved successfully:", fileName);
+              } catch (error) {
+                console.error("Failed to save image:", error);
+                alert(`Failed to save image: ${error.message}`);
+              }
+
+              // Update preview images
+              smallPreviewImage.src = URL.createObjectURL(blob);
+              smallPreviewImage.style.display = "block";
+              previewImage.src = URL.createObjectURL(blob);
+            }, "image/png");
+          } else {
+            console.error(
+              "Video element does not have enough data to capture."
+            );
+          }
+
         });
 
         smallPreviewImage.addEventListener("click", function () {
@@ -754,6 +801,196 @@ function openCamera() {
     alert("getUserMedia is not supported by your browser");
   }
 }
+
+function arrayBufferToBase64(buffer) {
+  const bytes = new Uint8Array(buffer);
+  let binary = "";
+  for (let i = 0; i < bytes.byteLength; i++) {
+    binary += String.fromCharCode(bytes[i]);
+  }
+  return btoa(binary);
+}
+
+// Function to open the photo gallery
+async function openPhotoGallery() {
+  const dirPath = "C:/Temp/camPics";
+
+  try {
+    // Check if the directory exists
+    const stats = await Neutralino.filesystem.getStats(dirPath);
+    if (!stats.isDirectory) throw new Error("Invalid gallery path.");
+
+    // Read the directory contents
+    const entries = await Neutralino.filesystem.readDirectory(dirPath);
+    console.log("Files in directory:", entries); // Debugging: Log file list
+
+    // Filter out only image files
+    const imageFiles = entries.filter((file) => {
+      const ext = file.entry.split(".").pop().toLowerCase();
+      return (
+        file.type === "FILE" &&
+        ["png", "jpg", "jpeg", "gif", "bmp"].includes(ext)
+      );
+    });
+
+    if (imageFiles.length === 0) {
+      alert("No images found in the gallery.");
+      return;
+    }
+
+    const galleryContainer = document.createElement("div");
+    galleryContainer.id = "gallery-container";
+    Object.assign(galleryContainer.style, {
+      display: "flex",
+      flexWrap: "wrap",
+      justifyContent: "center",
+      alignItems: "flex-start",
+      gap: "15px",
+      padding: "20px",
+      backgroundColor: "rgba(255, 255, 255, 0.95)",
+      position: "fixed",
+      top: "0",
+      left: "0",
+      width: "100vw",
+      height: "100vh",
+      overflowY: "auto",
+      zIndex: "1000",
+    });
+
+    const closeBtn = document.createElement("button");
+    closeBtn.textContent = "Close Gallery";
+    Object.assign(closeBtn.style, {
+      position: "fixed",
+      top: "20px",
+      right: "20px",
+      padding: "10px 15px",
+      backgroundColor: "#f44336",
+      color: "white",
+      border: "none",
+      borderRadius: "5px",
+      cursor: "pointer",
+      zIndex: "1001",
+    });
+    closeBtn.onclick = () => document.body.removeChild(galleryContainer);
+    galleryContainer.appendChild(closeBtn);
+
+    for (const { entry } of imageFiles) {
+      const filePath = `${dirPath}/${entry}`;
+      try {
+        const arrayBuffer = await Neutralino.filesystem.readBinaryFile(
+          filePath
+        );
+        const base64 = arrayBufferToBase64(arrayBuffer); // ✅ Proper conversion
+
+        const extension = entry.split(".").pop().toLowerCase();
+        const mimeTypeMap = {
+          png: "image/png",
+          jpg: "image/jpeg",
+          jpeg: "image/jpeg",
+          gif: "image/gif",
+          bmp: "image/bmp",
+        };
+        const mimeType = mimeTypeMap[extension] || "image/png";
+
+        // Debugging logs
+        console.log(`📁 File: ${entry}`);
+        console.log(`🔠 MIME Type: ${mimeType}`);
+        console.log(`🧬 Base64 Snippet: ${base64.slice(0, 50)}...`);
+        console.log(
+          `🖼 Image SRC: data:${mimeType};base64,${base64.slice(0, 50)}...`
+        );
+
+        const img = document.createElement("img");
+        img.src = `data:${mimeType};base64,${base64}`;
+
+        Object.assign(img.style, {
+          width: "120px",
+          height: "90px",
+          objectFit: "cover",
+          cursor: "pointer",
+          border: "2px solid #ccc",
+          borderRadius: "4px",
+        });
+
+        img.alt = entry;
+        img.title = entry;
+        img.addEventListener("click", () => viewFullImage(img.src));
+        galleryContainer.appendChild(img);
+      } catch (err) {
+        console.error(`❌ Failed to load ${entry}:`, err);
+      }
+    }
+
+    document.body.appendChild(galleryContainer);
+  } catch (error) {
+    console.error("Photo gallery error:", error);
+    alert("Failed to open photo gallery: " + error.message);
+  }
+}
+
+// Function to view a full-size image
+function viewFullImage(imagePath) {
+  const overlay = document.createElement("div");
+  Object.assign(overlay.style, {
+    position: "fixed",
+    top: 0,
+    left: 0,
+    width: "100vw",
+    height: "100vh",
+    backgroundColor: "rgba(0, 0, 0, 0.85)",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    zIndex: 1002,
+  });
+
+  const img = document.createElement("img");
+  img.src = imagePath;
+  img.alt = "Full view";
+  Object.assign(img.style, {
+    maxWidth: "90%",
+    maxHeight: "90%",
+    border: "4px solid white",
+    borderRadius: "8px",
+    boxShadow: "0 0 20px rgba(0,0,0,0.7)",
+  });
+
+  const closeBtn = document.createElement("button");
+  closeBtn.textContent = "×";
+  Object.assign(closeBtn.style, {
+    position: "absolute",
+    top: "20px",
+    right: "20px",
+    fontSize: "32px",
+    color: "white",
+    background: "none",
+    border: "none",
+    cursor: "pointer",
+    zIndex: "1003",
+  });
+  closeBtn.onclick = () => document.body.removeChild(overlay);
+
+  overlay.appendChild(img);
+  overlay.appendChild(closeBtn);
+  document.body.appendChild(overlay);
+}
+
+// Add a button to open the photo gallery
+const galleryButton = document.createElement("button");
+galleryButton.innerText = "Open Photo Gallery";
+galleryButton.style.position = "fixed";
+galleryButton.style.bottom = "20px";
+galleryButton.style.right = "20px";
+galleryButton.style.padding = "10px";
+galleryButton.style.backgroundColor = "#007bff";
+galleryButton.style.color = "white";
+galleryButton.style.border = "none";
+galleryButton.style.borderRadius = "5px";
+galleryButton.style.cursor = "pointer";
+
+galleryButton.addEventListener("click", openPhotoGallery);
+
+document.body.appendChild(galleryButton);
 
 async function shutdown() {
   if (codeEditor || camera) {

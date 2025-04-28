@@ -744,9 +744,20 @@ body {
   }
 
 .voice-recognition {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
   margin-top: 20px;
-  color: #ffc700;
+  position: relative;
+}
+
+#voice-message {
+  margin-top: 10px;
+  font-size: 18px;
+  color: #d3b84d;
   text-align: center;
+  min-height: 24px;
 }
 
 .voice-toggle-with-image {
@@ -764,7 +775,7 @@ body {
   border-radius: 5px;
   cursor: pointer;
   /* Add the background image */
-  background-image: url("img/VoiceCom.png");
+  background-image: url("img/Microphone_Off.png");
   background-size: contain; /* Adjust the size of the background image */
   background-repeat: no-repeat; /* Prevent repeating of the background image */
   background-position: center; /* Center the background image */
@@ -777,12 +788,6 @@ body {
   text-align: center;
   margin-top: 5px; /* Adjust the spacing between the image and text */
   color: #fffb00; /* Text color */
-}
-
-#voice-message {
-  margin-top: 10px;
-  font-size: 18px;
-  color: #d3b84d;
 }
 
 #editor-container.resizable {
@@ -917,6 +922,14 @@ body {
   height: 30px;
   margin-right: 8px;
   cursor: pointer;
+}
+
+/* Specific style for microphone icon to match other icons */
+#micButton {
+  width: 30px;
+  height: 30px;
+  transform: scale(1.15, 1.3); /* Scale more vertically (y-axis) than horizontally (x-axis) */
+  transform-origin: center; /* Scale from the center */
 }
 
 .editor-iconLOGO {
@@ -1243,9 +1256,9 @@ body {
     content: "Switch Mode";
     display: none;
     position: absolute;
-    /* top: calc(-100% - 5px); 
+    top: calc(-100% - 5px); /* Position above the button */
     left: 50%;
-    transform: translateX(-50%); */
+    transform: translateX(-50%);
     background-color: #000;
     color: #fff;
     padding: 5px 10px;
@@ -1276,9 +1289,9 @@ body {
     content: "Power";
     display: none;
     position: absolute;
-    /* top: calc(-100% - 5px); 
+    top: calc(-100% - 5px); /* Position above the button */
     left: 50%;
-    transform: translateX(-50%); */
+    transform: translateX(-50%);
     background-color: #000;
     color: #fff;
     padding: 5px 10px;
@@ -1527,5 +1540,28 @@ i.fa-step-backward {
   color: white;
   font-size: 24px;
   cursor: pointer;
+}
+
+.audio-visualizer {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 2px;
+  height: 50px;
+  width: 120px;
+  margin: 10px auto;
+  padding: 2px;
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+}
+
+.audio-visualizer .bar {
+  width: 8px;
+  height: 0px; /* Start with 0 height by default */
+  min-height: 0px; /* Allow bars to go completely to zero */
+  background-color: #ffd700;
+  border-radius: 2px;
+  transition: height 0.15s ease-out; /* Smoother transition when reducing height */
+  box-shadow: 0 0 5px rgba(255, 215, 0, 0.5);
 }
   

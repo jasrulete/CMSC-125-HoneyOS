@@ -1,5 +1,9 @@
 // voice.js
 let recognition;
+let audioContext;
+let analyser;
+let microphone;
+let animationFrameId;
 
 // Function to handle the voice commands
 function handleVoiceCommand(command) {
@@ -252,18 +256,92 @@ function handleVoiceCommand(command) {
   }
 }
 
+// Function to initialize audio visualization
+function initAudioVisualization() {
+  audioContext = new (window.AudioContext || window.webkitAudioContext)();
+  analyser = audioContext.createAnalyser();
+  analyser.fftSize = 256;
+  
+  navigator.mediaDevices.getUserMedia({ audio: true })
+    .then(stream => {
+      microphone = audioContext.createMediaStreamSource(stream);
+      microphone.connect(analyser);
+      visualizeAudio();
+    })
+    .catch(err => {
+      console.error('Error accessing microphone:', err);
+    });
+}
+
+// Function to visualize audio
+function visualizeAudio() {
+  const bufferLength = analyser.frequencyBinCount;
+  const dataArray = new Uint8Array(bufferLength);
+  
+  function draw() {
+    animationFrameId = requestAnimationFrame(draw);
+    analyser.getByteFrequencyData(dataArray);
+    
+    const bars = document.querySelectorAll('#audio-visualizer .bar');
+    if (!bars.length) return;
+
+    // Get frequency data for different ranges
+    const barCount = bars.length;
+    const step = Math.floor(bufferLength / barCount);
+    
+    bars.forEach((bar, index) => {
+      // Get average frequency for this bar's range
+      let sum = 0;
+      const start = index * step;
+      for (let i = 0; i < step; i++) {
+        sum += dataArray[start + i];
+      }
+      const average = sum / step;
+      
+      // Map the average to a height between 2px and 50px
+      const height = Math.max(2, Math.min(50, (average / 128) * 50));
+      bar.style.height = `${height}px`;
+    });
+  }
+  
+  draw();
+}
+
+// Function to stop audio visualization
+function stopAudioVisualization() {
+  if (animationFrameId) {
+    cancelAnimationFrame(animationFrameId);
+    animationFrameId = null;
+  }
+  if (microphone) {
+    microphone.disconnect();
+    microphone = null;
+  }
+  if (audioContext) {
+    audioContext.close();
+    audioContext = null;
+  }
+  // Immediately reset all bars to zero height
+  const bars = document.querySelectorAll('#audio-visualizer .bar');
+  bars.forEach(bar => {
+    bar.style.height = '0px';
+  });
+}
+
 // Function to start voice recognition
 function startVoiceRecognition() {
   recognition = new webkitSpeechRecognition();
   recognition.lang = "en-US";
   recognition.interimResults = true;
   recognition.maxAlternatives = 1;
-  recognition.continuous = true; // Set continuous to true
+  recognition.continuous = true;
 
   recognition.onstart = function () {
     console.log("Voice recognition started.");
     displayMessage("Listening...");
     playSound("sfx/start-sound.mp3");
+    initAudioVisualization();
+    updateMicrophoneImage(true);
   };
 
   recognition.onresult = function (event) {
@@ -284,6 +362,7 @@ function startVoiceRecognition() {
   recognition.onerror = function (event) {
     console.error("Voice recognition error:", event.error);
     displayMessage("Voice recognition for commands is stopped.");
+    updateMicrophoneImage(false);
     // playSound("sfx/error-sound.mp3");
   };
 
@@ -300,6 +379,9 @@ function stopVoiceRecognition() {
   if (recognition) {
     recognition.stop();
     recognition = null;
+    displayMessage("Voice recognition stopped");
+    stopAudioVisualization();
+    updateMicrophoneImage(false);
   }
 }
 
@@ -310,6 +392,12 @@ function enableSpeechToText() {
     recognition.continuous = true;
     recognition.interimResults = false;
     recognition.lang = "en-US";
+
+    // Update the microphone image in the editor
+    const micButton = document.getElementById("micButton");
+    if (micButton) {
+      micButton.src = "img/Microphone_On.png";
+    }
 
     recognition.onresult = function (event) {
       var result = event.results[event.results.length - 1][0].transcript + " ";
@@ -325,12 +413,22 @@ function enableSpeechToText() {
     recognition.onerror = function (event) {
       console.error("Speech recognition error:", event.error);
       displayMessage("Speech recognition stopped.");
+      // Reset microphone image
+      const micButton = document.getElementById("micButton");
+      if (micButton) {
+        micButton.src = "img/Microphone_Off.png";
+      }
       // playSound("sfx/error-sound.mp3");
       stopSpeechToText(); // Stop speech-to-text on error
     };
 
     recognition.onend = function () {
       console.log("Speech recognition ended.");
+      // Reset microphone image when recognition ends
+      const micButton = document.getElementById("micButton");
+      if (micButton) {
+        micButton.src = "img/Microphone_Off.png";
+      }
       // Restart speech-to-text if it's not explicitly stopped
       if (recognition) {
         recognition.start();
@@ -349,12 +447,23 @@ function stopSpeechToText() {
   if (recognition) {
     recognition.stop();
     recognition = null;
+    
+    // Reset microphone image
+    const micButton = document.getElementById("micButton");
+    if (micButton) {
+      micButton.src = "img/Microphone_Off.png";
+    }
   }
 }
 
-document
-  .getElementById("micButton")
-  .addEventListener("click", enableSpeechToText);
+// Add a toggling functionality to the mic button
+document.getElementById("micButton").addEventListener("click", function() {
+  if (recognition) {
+    stopSpeechToText();
+  } else {
+    enableSpeechToText();
+  }
+});
 
 // Function to toggle voice recognition
 function toggleVoiceRecognition() {
@@ -373,7 +482,9 @@ function toggleVoiceRecognition() {
 // Function to display a message
 function displayMessage(message) {
   const messageElement = document.getElementById("voice-message");
-  messageElement.textContent = message;
+  if (messageElement) {
+    messageElement.textContent = message;
+  }
 }
 
 // Function to play a sound
@@ -390,7 +501,25 @@ function speakText(text) {
     keepAliveOnThreadDetach: true,
   });
 }
+
+// Function to update the microphone image based on listening state
+function updateMicrophoneImage(isListening) {
+  const voiceToggleButton = document.getElementById("voice-toggle");
+  if (voiceToggleButton) {
+    if (isListening) {
+      voiceToggleButton.style.backgroundImage = "url('img/Microphone_On.png')";
+    } else {
+      voiceToggleButton.style.backgroundImage = "url('img/Microphone_Off.png')";
+    }
+  }
+}
+
 // Add event listener to the voice recognition toggle button
 document
   .getElementById("voice-toggle")
   .addEventListener("click", toggleVoiceRecognition);
+
+// Initialize the microphone image when the page loads
+document.addEventListener("DOMContentLoaded", function() {
+  updateMicrophoneImage(false); // Set initial state to not listening
+});
