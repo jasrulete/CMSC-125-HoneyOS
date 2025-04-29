@@ -853,22 +853,66 @@ function viewFullImage(imagePath) {
   document.body.appendChild(overlay);
 }
 
-// Add a button to open the photo gallery
-const galleryButton = document.createElement("button");
-galleryButton.innerText = "Open Photo Gallery";
-galleryButton.style.position = "fixed";
-galleryButton.style.bottom = "20px";
-galleryButton.style.right = "20px";
-galleryButton.style.padding = "10px";
-galleryButton.style.backgroundColor = "#007bff";
-galleryButton.style.color = "white";
-galleryButton.style.border = "none";
-galleryButton.style.borderRadius = "5px";
-galleryButton.style.cursor = "pointer";
+// Open the photo gallery when the button is clicked
+async function openGallery() {
+  const dirPath = "C:/Temp/camPics";
 
-galleryButton.addEventListener("click", openPhotoGallery);
+  try {
+    const stats = await Neutralino.filesystem.getStats(dirPath);
+    if (!stats.isDirectory) throw new Error("Invalid gallery path.");
 
-document.body.appendChild(galleryButton);
+    const entries = await Neutralino.filesystem.readDirectory(dirPath);
+
+    const imageFiles = entries.filter(file => {
+      const ext = file.entry.split(".").pop().toLowerCase();
+      return file.type === "FILE" && ["png", "jpg", "jpeg", "gif", "bmp"].includes(ext);
+    });
+
+    if (imageFiles.length === 0) {
+      alert("No images found in the gallery.");
+      return;
+    }
+
+    const galleryContainer = document.getElementById("gallery-images");
+    galleryContainer.innerHTML = ""; // Clear existing images first
+
+    for (const { entry } of imageFiles) {
+      const filePath = `${dirPath}/${entry}`;
+      try {
+        const arrayBuffer = await Neutralino.filesystem.readBinaryFile(filePath);
+        const base64 = arrayBufferToBase64(arrayBuffer);
+
+        const extension = entry.split(".").pop().toLowerCase();
+        const mimeTypeMap = {
+          png: "image/png",
+          jpg: "image/jpeg",
+          jpeg: "image/jpeg",
+          gif: "image/gif",
+          bmp: "image/bmp"
+        };
+        const mimeType = mimeTypeMap[extension] || "image/png";
+
+        const img = document.createElement("img");
+        img.src = `data:${mimeType};base64,${base64}`;
+        img.alt = entry;
+        img.title = entry;
+
+        galleryContainer.appendChild(img);
+      } catch (err) {
+        console.error(`❌ Failed to load ${entry}:`, err);
+      }
+    }
+
+    document.getElementById("gallery-modal").classList.remove("hidden");
+  } catch (error) {
+    console.error("Photo gallery error:", error);
+    alert("Failed to open photo gallery: " + error.message);
+  }
+}
+
+function closeGallery() {
+  document.getElementById("gallery-modal").classList.add("hidden");
+}
 
 async function shutdown() {
   if (codeEditor || camera) {
