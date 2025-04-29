@@ -554,7 +554,24 @@
             </div>
             <div class="calendar-right">
               <div class="events-container">
-                <h3 id="selected-date">Select a date</h3>
+                <div class="events-header">
+                  <h3 id="selected-date">Select a date</h3>
+                  <button class="add-event-btn" onclick="showEventInput()">
+                    <i class="fas fa-plus"></i>
+                  </button>
+                </div>
+                <div class="event-input-container hidden">
+                  <div class="input-with-voice">
+                    <input type="text" id="event-input" placeholder="Enter event details...">
+                    <button class="voice-input-btn" onclick="startEventVoiceInput()">
+                      <i class="fas fa-microphone"></i>
+                    </button>
+                  </div>
+                  <div class="event-input-buttons">
+                    <button onclick="addEvent()">Add</button>
+                    <button onclick="cancelEventInput()">Cancel</button>
+                  </div>
+                </div>
                 <div id="events-list" class="events-list">
                   <!-- Events will be displayed here -->
                 </div>

@@ -1,5 +1,6 @@
 let currentDate = new Date();
 let selectedDate = null;
+let events = {};
 
 function openCalendar() {
     const modal = document.getElementById('calendar-modal');
@@ -100,10 +101,94 @@ function selectDate(date) {
             day: 'numeric' 
         });
     
-    // Clear and update events list
-    const eventsList = document.getElementById('events-list');
-    eventsList.innerHTML = '<div class="no-events">No events for this date</div>';
+    // Update events list
+    updateEventsList();
 }
+
+function showEventInput() {
+    document.querySelector('.event-input-container').classList.remove('hidden');
+    document.getElementById('event-input').focus();
+}
+
+function cancelEventInput() {
+    document.querySelector('.event-input-container').classList.add('hidden');
+    document.getElementById('event-input').value = '';
+}
+
+function addEvent() {
+    if (!selectedDate) {
+        alert('Please select a date first');
+        return;
+    }
+
+    const input = document.getElementById('event-input');
+    const eventText = input.value.trim();
+    
+    if (!eventText) {
+        alert('Please enter event details');
+        return;
+    }
+
+    const dateKey = selectedDate.toISOString().split('T')[0];
+    if (!events[dateKey]) {
+        events[dateKey] = [];
+    }
+    
+    events[dateKey].push({
+        id: Date.now(), // unique ID for the event
+        text: eventText
+    });
+
+    // Clear input and hide container
+    input.value = '';
+    document.querySelector('.event-input-container').classList.add('hidden');
+    
+    // Update the events list
+    updateEventsList();
+}
+
+function deleteEvent(dateKey, eventId) {
+    events[dateKey] = events[dateKey].filter(event => event.id !== eventId);
+    if (events[dateKey].length === 0) {
+        delete events[dateKey];
+    }
+    updateEventsList();
+}
+
+function updateEventsList() {
+    const eventsList = document.getElementById('events-list');
+    if (!selectedDate) {
+        eventsList.innerHTML = '<div class="no-events">Select a date to add events</div>';
+        return;
+    }
+
+    const dateKey = selectedDate.toISOString().split('T')[0];
+    const dateEvents = events[dateKey] || [];
+
+    if (dateEvents.length === 0) {
+        eventsList.innerHTML = '<div class="no-events">No events for this date</div>';
+        return;
+    }
+
+    eventsList.innerHTML = dateEvents.map(event => `
+        <div class="event-item">
+            <span class="event-text">${event.text}</span>
+            <span class="delete-event" onclick="deleteEvent('${dateKey}', ${event.id})">
+                <i class="fas fa-times"></i>
+            </span>
+        </div>
+    `).join('');
+}
+
+// Add event listener for Enter key in event input
+document.addEventListener('DOMContentLoaded', function() {
+    const eventInput = document.getElementById('event-input');
+    eventInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            addEvent();
+        }
+    });
+});
 
 // Close modal when clicking outside of it
 window.onclick = function(event) {
