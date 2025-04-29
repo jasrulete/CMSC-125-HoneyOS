@@ -491,12 +491,49 @@
     <div id="calendar-modal" class="modal hidden">
       <div class="modal-content">
         <div class="modal-header">
-          <h2>Calendar</h2>
           <span class="close-btn" onclick="closeCalendar()">&times;</span>
         </div>
         <div class="modal-body">
-          <div id="calendar-container">
-            <!-- Calendar content will go here -->
+          <div class="calendar-container">
+            <div class="calendar-left">
+              <div class="calendar-header">
+                <button class="month-nav" onclick="changeMonth(-1)">&lt;</button>
+                <div class="month-year">
+                  <span id="current-month"></span>
+                  <span id="current-year" onclick="toggleYearSelector()"></span>
+                </div>
+                <button class="month-nav" onclick="changeMonth(1)">&gt;</button>
+              </div>
+              <div id="year-selector" class="year-selector hidden">
+                <div class="year-selector-content">
+                  <span class="year-option" onclick="selectYear(2020)">2020</span>
+                  <span class="year-option" onclick="selectYear(2021)">2021</span>
+                  <span class="year-option" onclick="selectYear(2022)">2022</span>
+                  <span class="year-option" onclick="selectYear(2023)">2023</span>
+                  <span class="year-option" onclick="selectYear(2024)">2024</span>
+                </div>
+              </div>
+              <div class="calendar-grid">
+                <div class="calendar-weekdays">
+                  <div>Sun</div>
+                  <div>Mon</div>
+                  <div>Tue</div>
+                  <div>Wed</div>
+                  <div>Thu</div>
+                  <div>Fri</div>
+                  <div>Sat</div>
+                </div>
+                <div id="calendar-days" class="calendar-days"></div>
+              </div>
+            </div>
+            <div class="calendar-right">
+              <div class="events-container">
+                <h3 id="selected-date">Select a date</h3>
+                <div id="events-list" class="events-list">
+                  <!-- Events will be displayed here -->
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
