@@ -100,6 +100,13 @@
         </div>
       </div>
 
+      <div class="hexagon-wrapper">
+        <div class="hexagon">
+          <img src="img/Calendar.png" alt="Calendar" class="icon" />
+          <label>Calendar</label>
+        </div>
+      </div>
+
     </div>
 
     <div class="hexagon-container2">
@@ -477,6 +484,65 @@
           <i class="fa fa-volume-up"></i>
         </div>
         <div class="close-btn" onclick="closeMusicPlayer()"><i class="fa fa-times"></i></div>
+      </div>
+    </div>
+    
+    <div id="calendar-container" class="hidden">
+      <div id="calendar-header">
+        <div id="calendar-headerIcons">
+          <div>
+            <img src="img/logo.png" alt="Honey OS Logo" class="calendar-iconLOGO" />
+          </div>
+          <div class="label">
+            <img src="img/NewEvent.png" alt="New Event" class="calendar-icon" id="new-event" />
+            <label>New Event</label>
+          </div>
+          <div class="label">
+            <img src="img/Microphone_Off.png" alt="Microphone" class="calendar-icon" id="calendar-micButton" />
+            <label>Voice Command</label>
+          </div>
+        </div>
+        <div id="calendar-headerIcons2">
+          <img src="img/Minimize.png" alt="Minimize" class="calendar-icon2" id="calendar-minimize" />
+          <img src="img/Maximize.png" alt="Maximize" class="calendar-icon2" id="calendar-max" />
+          <img src="img/Close.png" alt="Close" class="calendar-icon2" id="calendar-close" />
+        </div>
+      </div>
+      <div id="calendar-content">
+        <div id="calendar-navigation">
+          <button id="prev-month"><i class="fas fa-chevron-left"></i></button>
+          <h2 id="current-month-year">Month Year</h2>
+          <button id="next-month"><i class="fas fa-chevron-right"></i></button>
+        </div>
+        <div id="calendar-grid">
+          <div class="calendar-weekdays">
+            <div>Sun</div>
+            <div>Mon</div>
+            <div>Tue</div>
+            <div>Wed</div>
+            <div>Thu</div>
+            <div>Fri</div>
+            <div>Sat</div>
+          </div>
+          <div id="calendar-days"></div>
+        </div>
+        <div id="calendar-events">
+          <h3>Today's Events</h3>
+          <div id="events-list"></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="event-modal" class="modal hidden">
+      <div class="modal-content">
+        <h2>Add New Event</h2>
+        <form id="event-form">
+          <input type="text" id="event-title" placeholder="Event Title" required>
+          <input type="datetime-local" id="event-date" required>
+          <textarea id="event-description" placeholder="Event Description"></textarea>
+          <button type="submit">Add Event</button>
+          <button type="button" id="cancel-event">Cancel</button>
+        </form>
       </div>
     </div>
     
