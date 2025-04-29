@@ -253,6 +253,44 @@ function handleVoiceCommand(command) {
         shutdown();
       }, 2000);
     }
+  } else if (command.includes("calendar")) {
+    if (command.includes("open")) {
+      openCalendar();
+      speakText("Opening calendar");
+    } else if (command.includes("close")) {
+      closeCalendar();
+      speakText("Closing calendar");
+    }
+  } else if (command.includes("add event")) {
+    // Handle add event command outside of calendar check
+    const modal = document.getElementById('calendar-modal');
+    if (modal.classList.contains('hidden')) {
+      openCalendar(); // Open calendar if it's not open
+    }
+    
+    // Extract event text: everything after "add event" and before "please"
+    let eventText = command.substring(command.indexOf("add event") + 9);
+    eventText = eventText.replace(/please$/i, "").trim();
+    
+    if (eventText) {
+      console.log("Adding event:", eventText); // Debug log
+      if (!selectedDate) {
+        selectDate(new Date()); // Select today's date if none selected
+      }
+      const input = document.getElementById('event-input');
+      if (input) {
+        input.value = eventText;
+        showEventInput();
+        setTimeout(() => {
+          addEvent();
+          speakText("Added event: " + eventText);
+        }, 100);
+      } else {
+        speakText("Sorry, couldn't add the event. Please try again.");
+      }
+    } else {
+      speakText("Please specify what event to add");
+    }
   }
 }
 

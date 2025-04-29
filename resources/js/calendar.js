@@ -117,15 +117,14 @@ function cancelEventInput() {
 
 function addEvent() {
     if (!selectedDate) {
-        alert('Please select a date first');
-        return;
+        selectedDate = new Date(); // Default to today if no date selected
+        updateCalendar();
     }
 
     const input = document.getElementById('event-input');
     const eventText = input.value.trim();
     
     if (!eventText) {
-        alert('Please enter event details');
         return;
     }
 
@@ -135,7 +134,7 @@ function addEvent() {
     }
     
     events[dateKey].push({
-        id: Date.now(), // unique ID for the event
+        id: Date.now(),
         text: eventText
     });
 
