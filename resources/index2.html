@@ -107,6 +107,13 @@
         </div>
       </div>
 
+      <div class="hexagon-wrapper">
+        <div class="hexagon" onclick="openGallery()">
+          <i class="fas fa-image icon"></i>
+          <label>Gallery</label>
+        </div>
+      </div>
+
     </div>
 
     <div class="hexagon-container2">
@@ -576,6 +583,21 @@
         </div>
       </div>
     </div>
+
+    <!-- Gallery Modal -->
+    <div id="gallery-modal" class="modal hidden">
+      <div class="modal-content">
+        <div class="modal-header">
+          <span class="close-btn" onclick="closeGallery()">&times;</span>
+        </div>
+        <div class="modal-body">
+          <div id="gallery-images" class="gallery-images">
+            <!-- Images will be dynamically loaded here -->
+          </div>
+        </div>
+      </div>
+    </div>
+
 
     <script src="js/neutralino.js"></script>
     <script src="js/voice.js"></script>

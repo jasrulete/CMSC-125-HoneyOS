@@ -1649,6 +1649,35 @@ i.fa-step-backward {
   padding-right: 5px;
 }
 
+/*Gallery*/
+.gallery-images {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 15px;
+  padding: 20px;
+}
+
+.gallery-images img {
+  width: 120px;
+  height: 90px;
+  object-fit: cover;
+  border: 2px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.gallery-images img:hover {
+  transform: scale(1.1);
+}
+
+.fas.fa-image {
+  font-size: 2em;
+  color: #333;
+  margin-bottom: 5px;
+}
+
 /* Customizing scrollbar */
 .year-selector-content::-webkit-scrollbar {
   width: 6px;
