@@ -1488,7 +1488,6 @@ i.fa-step-backward {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -1496,31 +1495,36 @@ i.fa-step-backward {
 }
 
 .modal-content {
-  background-color: #fefefe;
+  background-color: #ffc700;
   padding: 20px;
   border-radius: 10px;
-  width: 80%;
-  max-width: 600px;
+  width: 70%;
+  height: 70%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .modal-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 10px;
+  z-index: 1;
 }
 
 .modal-header h2 {
-  margin: 0;
-  color: #333;
+  display: none; /* Hide the title since we're moving the close button */
 }
 
 .close-btn {
-  color: #aaa;
+  color: #000;
   font-size: 28px;
   font-weight: bold;
   cursor: pointer;
+  padding: 5px;
 }
 
 .close-btn:hover {
@@ -1528,7 +1532,10 @@ i.fa-step-backward {
 }
 
 .modal-body {
-  padding: 10px 0;
+  padding: 20px;
+  color: #000;
+  height: 100%;
+  overflow-y: auto;
 }
 
 .hidden {
