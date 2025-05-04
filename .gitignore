@@ -1,10 +1,21 @@
 # Log files
 neutralinojs.log
 *.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Dependencies
+node_modules/
+dist/
+build/
 
 # Temp and cache files
 .tmp/
 .cache/
+.nuxt/
+.nuxt-dist/
+.nuxt-prod/
 
 # OS generated files
 .DS_Store
@@ -13,4 +24,19 @@ neutralinojs.log
 .Spotlight-V100
 .Trashes
 ehthumbs.db
-Thumbs.db 
+Thumbs.db
+
+# IDE and editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Neutralino.js specific
+.resources/ 
