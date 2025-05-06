@@ -49,6 +49,128 @@ document.addEventListener("DOMContentLoaded", function () {
 
   const editorTask = document.getElementById("editor-task");
   editorTask.addEventListener("click", toggleEditor);
+
+  // --- Add this block to enable resizing ---
+  const container = document.getElementById("editor-container");
+
+  let isResizing = false;
+  let currentEdge = null;
+  let startX, startY;
+  let startWidth, startHeight;
+  let startLeft, startTop;
+  
+  const MIN_WIDTH = 300;
+  const MIN_HEIGHT = 200;
+  const EDGE_THRESHOLD = 10;
+  
+  // Detect edges for resizing
+  container.addEventListener("mousemove", (e) => {
+    if (isResizing) return;
+  
+    const rect = container.getBoundingClientRect();
+    const offsetX = e.clientX - rect.left;
+    const offsetY = e.clientY - rect.top;
+  
+    container.classList.remove(
+      "edge-top", "edge-bottom", "edge-left", "edge-right",
+      "edge-top-left", "edge-top-right", "edge-bottom-left", "edge-bottom-right"
+    );
+  
+    let edge = null;
+    const onLeft = offsetX < EDGE_THRESHOLD;
+    const onRight = offsetX > rect.width - EDGE_THRESHOLD;
+    const onTop = offsetY < EDGE_THRESHOLD;
+    const onBottom = offsetY > rect.height - EDGE_THRESHOLD;
+  
+    if (onTop && onLeft) edge = "top-left";
+    else if (onTop && onRight) edge = "top-right";
+    else if (onBottom && onLeft) edge = "bottom-left";
+    else if (onBottom && onRight) edge = "bottom-right";
+    else if (onTop) edge = "top";
+    else if (onBottom) edge = "bottom";
+    else if (onLeft) edge = "left";
+    else if (onRight) edge = "right";
+  
+    if (edge) {
+      container.classList.add("edge-" + edge);
+      currentEdge = edge;
+    } else {
+      currentEdge = null;
+    }
+  });
+  
+  // Start resizing
+  container.addEventListener("mousedown", (e) => {
+    if (!currentEdge) return;
+  
+    e.preventDefault();
+    e.stopPropagation(); // 🛑 Prevents triggering dragging
+  
+    isResizing = true;
+  
+    const styles = window.getComputedStyle(container);
+    startX = e.clientX;
+    startY = e.clientY;
+    startWidth = parseFloat(styles.width);
+    startHeight = parseFloat(styles.height);
+    startLeft = parseFloat(styles.left);
+    startTop = parseFloat(styles.top);
+  
+    document.addEventListener("mousemove", onResize);
+    document.addEventListener("mouseup", stopResize);
+    document.getElementById("editor-header").addEventListener("mousedown", startDragging);
+  });
+  
+  // Resize logic
+  function onResize(e) {
+    if (!isResizing) return;
+  
+    const dx = e.clientX - startX;
+    const dy = e.clientY - startY;
+  
+    let newWidth = startWidth;
+    let newHeight = startHeight;
+    let newLeft = startLeft;
+    let newTop = startTop;
+  
+    // Right edge
+    if (currentEdge.includes("right")) {
+      newWidth = Math.max(MIN_WIDTH, startWidth + dx);
+      container.style.width = newWidth + "px";
+    }
+  
+    // Bottom edge
+    if (currentEdge.includes("bottom")) {
+      newHeight = Math.max(MIN_HEIGHT, startHeight + dy);
+      container.style.height = newHeight + "px";
+    }
+  
+    // Left edge
+    if (currentEdge.includes("left")) {
+      const proposedWidth = startWidth - dx;
+      if (proposedWidth > MIN_WIDTH) {
+        container.style.width = proposedWidth + "px";
+        container.style.left = (startLeft + dx) + "px";
+      }
+    }
+  
+    // Top edge
+    if (currentEdge.includes("top")) {
+      const proposedHeight = startHeight - dy;
+      if (proposedHeight > MIN_HEIGHT) {
+        container.style.height = proposedHeight + "px";
+        container.style.top = (startTop + dy) + "px";
+      }
+    }
+  }
+  
+  // Stop resizing
+  function stopResize() {
+    isResizing = false;
+    currentEdge = null;
+    document.removeEventListener("mousemove", onResize);
+    document.removeEventListener("mouseup", stopResize);
+  }
 });
 
 function toggleEditor() {
@@ -1136,10 +1258,9 @@ let track_index = 0;
 let isPlaying = false;
 let updateTimer;
 
-// Create new audio element
 let curr_track = document.createElement("audio");
 
-// Define the tracks that have to be played
+// Define the tracks
 let track_list = [
   {
     name: "Houdini (Extended Edit)",
@@ -1189,39 +1310,30 @@ function random_bg_color() {
   }
 }
 
-function loadTrack(track_index) {
+loadTrack(track_index);
+
+function loadTrack(index) {
   clearInterval(updateTimer);
   resetValues();
-  curr_track.src = track_list[track_index].path;
 
-  curr_track.addEventListener("loadedmetadata", function () {
-    seek_slider.max = curr_track.duration;
+  curr_track.src = track_list[index].path;
+  curr_track.load();
+
+  curr_track.addEventListener("loadedmetadata", () => {
+    seek_slider.max = Math.floor(curr_track.duration);
     total_duration.textContent = formatTime(curr_track.duration);
   });
 
-  curr_track.addEventListener("timeupdate", updateSeekSlider);
+  curr_track.addEventListener("timeupdate", updateSeek);
 
-  track_art.style.backgroundImage =
-    "url(" + track_list[track_index].image + ")";
-  track_name.textContent = track_list[track_index].name;
-  track_artist.textContent = track_list[track_index].artist;
-  now_playing.textContent =
-    "PLAYING " + (track_index + 1) + " OF " + track_list.length;
+  track_art.style.backgroundImage = `url(${track_list[index].image})`;
+  track_name.textContent = track_list[index].name;
+  track_artist.textContent = track_list[index].artist;
+  now_playing.textContent = `PLAYING ${index + 1} OF ${track_list.length}`;
 
   curr_track.addEventListener("ended", nextTrack);
-  random_bg_color();
-}
 
-function formatTime(seconds) {
-  let minutes = Math.floor(seconds / 60);
-  seconds = Math.floor(seconds % 60);
-  if (minutes < 10) {
-    minutes = "0" + minutes;
-  }
-  if (seconds < 10) {
-    seconds = "0" + seconds;
-  }
-  return minutes + ":" + seconds;
+  random_bg_color();
 }
 
 function resetValues() {
@@ -1230,19 +1342,9 @@ function resetValues() {
   seek_slider.value = 0;
 }
 
-// Load the first track in the tracklist
-loadTrack(track_index);
-
 function playpauseTrack() {
-  if (curr_track.paused) {
-    curr_track.play();
-    isPlaying = true;
-    playpause_btn.innerHTML = '<i class="fa fa-pause-circle fa-5x"></i>';
-  } else {
-    curr_track.pause();
-    isPlaying = false;
-    playpause_btn.innerHTML = '<i class="fa fa-play-circle fa-5x"></i>';
-  }
+  if (!isPlaying) playTrack();
+  else pauseTrack();
 }
 
 function playTrack() {
@@ -1258,60 +1360,42 @@ function pauseTrack() {
 }
 
 function nextTrack() {
-  if (track_index < track_list.length - 1) track_index += 1;
-  else track_index = 0;
+  track_index = (track_index + 1) % track_list.length;
   loadTrack(track_index);
   playTrack();
 }
 
 function prevTrack() {
-  if (track_index > 0) track_index -= 1;
-  else track_index = track_list.length - 1;
+  track_index = (track_index - 1 + track_list.length) % track_list.length;
   loadTrack(track_index);
   playTrack();
 }
 
 function seekTo() {
-  let seekto = curr_track.duration * (seek_slider.value / 100);
-  curr_track.currentTime = seekto;
+  curr_track.currentTime = seek_slider.value;
 }
 
 function setVolume() {
   curr_track.volume = volume_slider.value / 100;
 }
 
-function updateSeekSlider() {
-  let seekPosition = 0;
-
+function updateSeek() {
   if (!isNaN(curr_track.duration)) {
-    seekPosition = curr_track.currentTime * (100 / curr_track.duration);
-    seek_slider.value = seekPosition;
+    seek_slider.value = Math.floor(curr_track.currentTime);
 
-    let currentMinutes = Math.floor(curr_track.currentTime / 60);
-    let currentSeconds = Math.floor(
-      curr_track.currentTime - currentMinutes * 60
-    );
-    let durationMinutes = Math.floor(curr_track.duration / 60);
-    let durationSeconds = Math.floor(
-      curr_track.duration - durationMinutes * 60
-    );
-
-    if (currentSeconds < 10) {
-      currentSeconds = "0" + currentSeconds;
-    }
-    if (durationSeconds < 10) {
-      durationSeconds = "0" + durationSeconds;
-    }
-    if (currentMinutes < 10) {
-      currentMinutes = "0" + currentMinutes;
-    }
-    if (durationMinutes < 10) {
-      durationMinutes = "0" + durationMinutes;
-    }
-
-    curr_time.textContent = currentMinutes + ":" + currentSeconds;
-    total_duration.textContent = durationMinutes + ":" + durationSeconds;
+    curr_time.textContent = formatTime(curr_track.currentTime);
+    total_duration.textContent = formatTime(curr_track.duration);
   }
 }
 
+function formatTime(seconds) {
+  let minutes = Math.floor(seconds / 60);
+  let secs = Math.floor(seconds % 60);
+  if (minutes < 10) minutes = "0" + minutes;
+  if (secs < 10) secs = "0" + secs;
+  return `${minutes}:${secs}`;
+}
+
+// Attach events
 seek_slider.addEventListener("input", seekTo);
+volume_slider.addEventListener("input", setVolume);

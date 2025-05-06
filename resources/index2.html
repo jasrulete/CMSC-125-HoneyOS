@@ -336,7 +336,7 @@
     </div>
     
 
-    <div id="editor-container" class="hidden">
+    <div id="editor-container" class="hidden resizable">
       <div id="editor-header">
         <div id="editor-headerIcons">
         
@@ -411,8 +411,8 @@
 
           <div class="label">
           <img
-            src="img/Microphone_Off.png"
-            alt="Microphone"
+            src="img/Microphone.png"
+            alt="Save File"
             class="editor-icon"
             id="micButton"
           />
@@ -442,7 +442,6 @@
         />
         </div>
       </div>
-
       <textarea id="code-editor"></textarea>
     </div>
 
@@ -482,7 +481,7 @@
         </div>
         <div class="slider_container">
           <div class="current-time">00:00</div>
-          <input type="range" min="1" max="100" value="0" class="seek_slider" onchange="seekTo()">
+          <input type="range" min="0" value="0" class="seek_slider">
           <div class="total-duration">00:00</div>
         </div>
         <div class="slider_container">
