@@ -1,3 +1,15 @@
+/* Set up CSS variables for scale-resistant values */
+:root {
+  --base-scale: 1;
+  --current-scale: 1;
+}
+
+html {
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
 html, body {
   margin: 0;
   padding: 0;
@@ -5,20 +17,23 @@ html, body {
   height: 100%;
   width: 100%;
   position: fixed;
-  font-size: 16px; /* Base font size */
+  font-size: 16px;
+  -ms-content-zooming: none;
+  -ms-touch-action: none;
+  touch-action: none;
 }
 
+/* Force transformation to ensure consistent rendering */
 body {
-  transform: scale(1.25);
   transform-origin: top left;
-  width: 80%; /* 100/1.25 = 80% to compensate for scaling */
-  height: 80%; /* 100/1.25 = 80% to compensate for scaling */
   background-color: black;
   display: flex;
   justify-content: flex-start;
   align-items: flex-end;
   box-sizing: border-box;
   position: relative;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 #splash-screen {
@@ -1593,28 +1608,27 @@ i.fa-step-backward {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100vw; /* Use viewport width instead of % */
-  height: 100vh; /* Use viewport height instead of % */
+  width: 100vw;
+  height: 100vh;
   background-color: transparent;
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1000;
-  transform: scale(0.8); /* Scale back to counteract the body scaling */
   transform-origin: top left;
 }
 
 .modal-content {
   background-color: #ffc700;
-  padding: 20px;
-  border-radius: 15px;
-  width: 70vw; /* Viewport-relative units */
-  height: 70vh; /* Viewport-relative units */
+  padding: 2vmin;
+  border-radius: 1.5vmin;
+  width: 70vw;
+  height: 70vh;
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+  box-shadow: 0 1vmin 2vmin rgba(0,0,0,0.2);
 }
 
 .modal-header {
@@ -1661,7 +1675,7 @@ i.fa-step-backward {
 
 .calendar-container {
   display: flex;
-  height: 95%;
+  height: 100%;
   font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
@@ -2093,4 +2107,16 @@ i.fa-step-backward {
 
 .rich-text-editor u {
   text-decoration: underline;
+}
+
+/* Add these !important rules to prevent scaling issues */
+.calendar-day, .year-option, .event-item, .modal button {
+  transform: none !important;
+  zoom: normal !important;
+}
+
+/* Prevent inconsistent font rendering */
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }

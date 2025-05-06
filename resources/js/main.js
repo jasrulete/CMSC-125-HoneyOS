@@ -12,7 +12,7 @@ let saveInterval = 2000; // Save every 2 seconds
 let fileManager;
 let editorState = "normal"; // 'minimized', 'normal', or 'maximized'
 
-// Prevent scrolling and ensure consistent scaling
+// Improve the scaling function to handle different system scaling settings
 document.addEventListener('DOMContentLoaded', function() {
   // Prevent scrolling
   document.body.addEventListener('wheel', function(e) {
@@ -24,6 +24,12 @@ document.addEventListener('DOMContentLoaded', function() {
     e.preventDefault();
   });
   
+  document.addEventListener('touchmove', function(e) {
+    if (e.touches.length > 1) {
+      e.preventDefault();
+    }
+  }, { passive: false });
+  
   // Prevent page scrolling with arrow keys, space, etc.
   window.addEventListener('keydown', function(e) {
     if(['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].indexOf(e.code) > -1 && 
@@ -34,18 +40,31 @@ document.addEventListener('DOMContentLoaded', function() {
   
   // Set body scale based on window size to maintain consistent appearance
   function setBodyScale() {
-    // Lock scale at 125%
-    document.body.style.transform = 'scale(1.25)';
+    const targetScale = 1.25; // Fixed scale at 125%
+    
+    // Get device pixel ratio to account for system scaling
+    const devicePixelRatio = window.devicePixelRatio || 1;
+    
+    // Calculate the scale needed to compensate for system scaling
+    const compensatedScale = targetScale / devicePixelRatio;
+    
+    // Apply scaling to body
+    document.body.style.transform = `scale(${compensatedScale})`;
     document.body.style.transformOrigin = 'top left';
-    document.body.style.width = '80%';
-    document.body.style.height = '80%';
+    document.body.style.width = `${100 / compensatedScale}%`;
+    document.body.style.height = `${100 / compensatedScale}%`;
     
     // Adjust modal scale to counteract body scaling
     const modals = document.querySelectorAll('.modal');
     modals.forEach(modal => {
-      modal.style.transform = 'scale(0.8)';
+      modal.style.transform = `scale(${1 / compensatedScale})`;
       modal.style.transformOrigin = 'top left';
     });
+    
+    // Set a CSS variable for the current scale that can be used in other parts of the CSS
+    document.documentElement.style.setProperty('--current-scale', compensatedScale);
+    
+    console.log(`Device pixel ratio: ${devicePixelRatio}, Applied scale: ${compensatedScale}`);
   }
   
   // Set scale on load and window resize
