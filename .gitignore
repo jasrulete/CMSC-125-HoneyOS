@@ -11,6 +11,7 @@ dist/
 build/
 
 # Temp and cache files
+.tmp
 .tmp/
 .cache/
 .nuxt/
