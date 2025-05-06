@@ -12,6 +12,47 @@ let saveInterval = 2000; // Save every 2 seconds
 let fileManager;
 let editorState = "normal"; // 'minimized', 'normal', or 'maximized'
 
+// Prevent scrolling and ensure consistent scaling
+document.addEventListener('DOMContentLoaded', function() {
+  // Prevent scrolling
+  document.body.addEventListener('wheel', function(e) {
+    e.preventDefault();
+  }, { passive: false });
+  
+  // Prevent pinch zoom
+  document.addEventListener('gesturestart', function(e) {
+    e.preventDefault();
+  });
+  
+  // Prevent page scrolling with arrow keys, space, etc.
+  window.addEventListener('keydown', function(e) {
+    if(['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].indexOf(e.code) > -1 && 
+       !document.activeElement.matches('input, textarea, [contenteditable]')) {
+      e.preventDefault();
+    }
+  });
+  
+  // Set body scale based on window size to maintain consistent appearance
+  function setBodyScale() {
+    // Lock scale at 125%
+    document.body.style.transform = 'scale(1.25)';
+    document.body.style.transformOrigin = 'top left';
+    document.body.style.width = '80%';
+    document.body.style.height = '80%';
+    
+    // Adjust modal scale to counteract body scaling
+    const modals = document.querySelectorAll('.modal');
+    modals.forEach(modal => {
+      modal.style.transform = 'scale(0.8)';
+      modal.style.transformOrigin = 'top left';
+    });
+  }
+  
+  // Set scale on load and window resize
+  setBodyScale();
+  window.addEventListener('resize', setBodyScale);
+});
+
 function onWindowClose() {
   Neutralino.app.exit();
 }
