@@ -253,6 +253,9 @@ function createCodeEditor() {
   const closeFileIcon = document.getElementById("close-file");
   const minimizeIcon = document.getElementById("minimize");
   const maximizeIcon = document.getElementById("max");
+  const boldIcon = document.getElementById("bold-text");
+  const italicIcon = document.getElementById("italic-text");
+  const underlineIcon = document.getElementById("underline-text");
 
   newFileIcon.addEventListener("click", createNewFile);
   openFileIcon.addEventListener("click", openFile);
@@ -264,6 +267,9 @@ function createCodeEditor() {
   closeFileIcon.addEventListener("click", closeFile);
   minimizeIcon.addEventListener("click", minimizeEditor);
   maximizeIcon.addEventListener("click", max);
+  boldIcon.addEventListener("click", formatBold);
+  italicIcon.addEventListener("click", formatItalic);
+  underlineIcon.addEventListener("click", formatUnderline);
 
   editorContainer.classList.remove("hidden");
 
@@ -309,6 +315,26 @@ function createCodeEditor() {
     } else if (event.ctrlKey && event.key === "y") {
       event.preventDefault();
       redo();
+    }
+  });
+
+  // Add keyboard shortcuts for formatting
+  document.getElementById('code-editor').addEventListener('keydown', function(event) {
+    if (event.ctrlKey) {
+      switch(event.key.toLowerCase()) {
+        case 'b':
+          event.preventDefault();
+          formatBold();
+          break;
+        case 'i':
+          event.preventDefault();
+          formatItalic();
+          break;
+        case 'u':
+          event.preventDefault();
+          formatUnderline();
+          break;
+      }
     }
   });
 
@@ -1440,3 +1466,54 @@ function formatTime(seconds) {
 // Attach events
 seek_slider.addEventListener("input", seekTo);
 volume_slider.addEventListener("input", setVolume);
+
+function formatBold() {
+  document.execCommand('bold', false, null);
+  updateFormatButtonState('bold-text');
+  isFileSaved = false;
+  updateSaveButton();
+}
+
+function formatItalic() {
+  document.execCommand('italic', false, null);
+  updateFormatButtonState('italic-text');
+  isFileSaved = false;
+  updateSaveButton();
+}
+
+function formatUnderline() {
+  document.execCommand('underline', false, null);
+  updateFormatButtonState('underline-text');
+  isFileSaved = false;
+  updateSaveButton();
+}
+
+function updateFormatButtonState(buttonId) {
+  const button = document.getElementById(buttonId);
+  const command = buttonId.split('-')[0];
+  const isActive = document.queryCommandState(command);
+  
+  if (isActive) {
+    button.classList.add('format-active');
+  } else {
+    button.classList.remove('format-active');
+  }
+}
+
+// Add event listeners for formatting buttons
+document.getElementById('bold-text').addEventListener('click', formatBold);
+document.getElementById('italic-text').addEventListener('click', formatItalic);
+document.getElementById('underline-text').addEventListener('click', formatUnderline);
+
+// Update button states when selection changes
+document.getElementById('code-editor').addEventListener('mouseup', function() {
+  updateFormatButtonState('bold-text');
+  updateFormatButtonState('italic-text');
+  updateFormatButtonState('underline-text');
+});
+
+document.getElementById('code-editor').addEventListener('keyup', function() {
+  updateFormatButtonState('bold-text');
+  updateFormatButtonState('italic-text');
+  updateFormatButtonState('underline-text');
+});
