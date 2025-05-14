@@ -36,7 +36,7 @@ function setBodyScale() {
     modal.style.transformOrigin = 'top left';
   });
   
-  // Set a CSS variable for the current scale that can be used in other parts of the CSS
+  // Set the CSS variable for the current scale
   document.documentElement.style.setProperty('--current-scale', compensatedScale);
   
   console.log(`Device pixel ratio: ${devicePixelRatio}, Applied scale: ${compensatedScale}`);

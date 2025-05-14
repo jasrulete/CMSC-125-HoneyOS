@@ -36,6 +36,17 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+#hexagon-containerSplash {
+  position: fixed;
+  top: calc(50vh - (50vh * var(--current-scale)));
+  left: calc(50vw - (50vw * var(--current-scale)));
+  transform-origin: top left;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1;
+  pointer-events: none;
+}
+
 #splash-screen {
   position: fixed;
   top: 0;
