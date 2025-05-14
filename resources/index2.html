@@ -9,8 +9,35 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
+    
+    <!-- Load critical scripts in head for immediate scaling -->
+    <script src="js/neutralino.js"></script>
+    <script src="js/main.js"></script>
   </head>
   <body>
+    <!-- Apply scaling immediately before anything else loads -->
+    <script>
+      // Immediately apply scaling to prevent any visible delay
+      if (typeof setBodyScale === 'function') {
+        // If the function is already defined in main.js and it's loaded
+        setBodyScale();
+      } else {
+        // Define and apply scaling inline if main.js hasn't loaded yet
+        function setBodyScaleInline() {
+          const targetScale = 1.25;
+          const devicePixelRatio = window.devicePixelRatio || 1;
+          const compensatedScale = targetScale / devicePixelRatio;
+          
+          document.body.style.transform = `scale(${compensatedScale})`;
+          document.body.style.transformOrigin = 'top left';
+          document.body.style.width = `${100 / compensatedScale}%`;
+          document.body.style.height = `${100 / compensatedScale}%`;
+          
+          document.documentElement.style.setProperty('--current-scale', compensatedScale);
+        }
+        setBodyScaleInline();
+      }
+    </script>
     <!-- <img src="img/Group 19.png" alt="Honey OS Logo" class="logo1"> -->
 
     <!-- hexagonbackground -->
@@ -630,9 +657,7 @@
     </div>
 
 
-    <script src="js/neutralino.js"></script>
     <script src="js/voice.js"></script>
-    <script src="js/main.js"></script>
     <script src="js/speechToText.js"></script>
     <script src="js/drawer.js"></script>
     <script src="js/hex.js"></script>

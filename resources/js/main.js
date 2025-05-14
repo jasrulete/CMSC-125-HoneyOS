@@ -13,7 +13,39 @@ let fileManager;
 let editorState = "normal"; // 'minimized', 'normal', or 'maximized'
 
 // Improve the scaling function to handle different system scaling settings
+// Define scaling function globally so it can be called immediately
+function setBodyScale() {
+  const targetScale = 1.25; // Fixed scale at 125%
+  
+  // Get device pixel ratio to account for system scaling
+  const devicePixelRatio = window.devicePixelRatio || 1;
+  
+  // Calculate the scale needed to compensate for system scaling
+  const compensatedScale = targetScale / devicePixelRatio;
+  
+  // Apply scaling to body
+  document.body.style.transform = `scale(${compensatedScale})`;
+  document.body.style.transformOrigin = 'top left';
+  document.body.style.width = `${100 / compensatedScale}%`;
+  document.body.style.height = `${100 / compensatedScale}%`;
+  
+  // Adjust modal scale to counteract body scaling
+  const modals = document.querySelectorAll('.modal');
+  modals.forEach(modal => {
+    modal.style.transform = `scale(${1 / compensatedScale})`;
+    modal.style.transformOrigin = 'top left';
+  });
+  
+  // Set the CSS variable for the current scale
+  document.documentElement.style.setProperty('--current-scale', compensatedScale);
+  
+  console.log(`Device pixel ratio: ${devicePixelRatio}, Applied scale: ${compensatedScale}`);
+}
+
 document.addEventListener('DOMContentLoaded', function() {
+  // Apply scaling immediately
+  setBodyScale();
+  
   // Prevent scrolling
   document.body.addEventListener('wheel', function(e) {
     e.preventDefault();
@@ -38,37 +70,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
   
-  // Set body scale based on window size to maintain consistent appearance
-  function setBodyScale() {
-    const targetScale = 1.25; // Fixed scale at 125%
-    
-    // Get device pixel ratio to account for system scaling
-    const devicePixelRatio = window.devicePixelRatio || 1;
-    
-    // Calculate the scale needed to compensate for system scaling
-    const compensatedScale = targetScale / devicePixelRatio;
-    
-    // Apply scaling to body
-    document.body.style.transform = `scale(${compensatedScale})`;
-    document.body.style.transformOrigin = 'top left';
-    document.body.style.width = `${100 / compensatedScale}%`;
-    document.body.style.height = `${100 / compensatedScale}%`;
-    
-    // Adjust modal scale to counteract body scaling
-    const modals = document.querySelectorAll('.modal');
-    modals.forEach(modal => {
-      modal.style.transform = `scale(${1 / compensatedScale})`;
-      modal.style.transformOrigin = 'top left';
-    });
-    
-    // Set a CSS variable for the current scale that can be used in other parts of the CSS
-    document.documentElement.style.setProperty('--current-scale', compensatedScale);
-    
-    console.log(`Device pixel ratio: ${devicePixelRatio}, Applied scale: ${compensatedScale}`);
-  }
-  
-  // Set scale on load and window resize
-  setBodyScale();
+  // Listen for window resize events to re-apply scaling
   window.addEventListener('resize', setBodyScale);
 });
 
@@ -80,14 +82,78 @@ Neutralino.init();
 Neutralino.events.on("windowClose", onWindowClose);
 
 document.addEventListener("DOMContentLoaded", function () {
-  setTimeout(function () {
-    const splashScreen = document.getElementById("splash-screen");
-    splashScreen.style.transition = "opacity 1s ease-out";
-    splashScreen.style.opacity = 0;
+  // Apply scaling immediately
+  setBodyScale();
+  
+  // Check if we're on the splash screen
+  const splashScreen = document.getElementById("splash-screen");
+  
+  if (splashScreen) {
+    // We're on the splash screen (index.html)
     setTimeout(function () {
-      window.location.href = "index2.html";
-    }, 1000);
-  }, 10000);
+      // Start the fade out animation
+      splashScreen.style.transition = "opacity 1s ease-out";
+      splashScreen.style.opacity = 0;
+      
+      setTimeout(function () {
+        // Instead of traditional redirect, use a smoother transition
+        // First, fetch index2.html content
+        fetch('index2.html')
+          .then(response => response.text())
+          .then(html => {
+            // Create a temporary container to process the HTML
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = html;
+            
+            // Extract the body content from the fetched HTML
+            const newBodyContent = tempDiv.querySelector('body').innerHTML;
+            
+            // Apply a fade-in effect for the new content
+            const mainContent = document.createElement('div');
+            mainContent.innerHTML = newBodyContent;
+            mainContent.style.opacity = 0;
+            mainContent.style.transition = 'opacity 0.5s ease-in';
+            
+            // Clear the current body content but maintain scaling
+            document.body.innerHTML = '';
+            
+            // Append the new content
+            document.body.appendChild(mainContent);
+            
+            // Force a reflow to ensure smooth transition
+            void mainContent.offsetWidth;
+            
+            // Fade in the new content
+            mainContent.style.opacity = 1;
+            
+            // Execute any scripts in the new content
+            const scripts = Array.from(tempDiv.querySelectorAll('script'));
+            scripts.forEach(script => {
+              // Skip scripts that were already loaded in the head
+              if (script.src && (script.src.includes('neutralino.js') || script.src.includes('main.js'))) {
+                return;
+              }
+              
+              const newScript = document.createElement('script');
+              if (script.src) {
+                newScript.src = script.src;
+              } else {
+                newScript.textContent = script.textContent;
+              }
+              document.body.appendChild(newScript);
+            });
+            
+            // Reapply scaling to ensure it's maintained
+            setBodyScale();
+          })
+          .catch(error => {
+            console.error('Error during page transition:', error);
+            // Fallback to traditional redirect if fetch fails
+            window.location.href = "index2.html";
+          });
+      }, 1000);
+    }, 10000);
+  }
 
   const textEditorHexagon = document.querySelector(
     ".hexagon-wrapper:nth-child(1) .hexagon"
