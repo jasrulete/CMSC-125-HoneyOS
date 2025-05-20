@@ -209,7 +209,7 @@
                 if (currentStepIndex < simulationSteps.length - 1) {
                     currentStepIndex++;
                     updateSimulationDisplay();
-                    stepPrevBtn.disabled = false;
+                    stepPrevBtn.disabled = (currentStepIndex === 0);
                     stepNextBtn.disabled = (currentStepIndex === simulationSteps.length - 1);
                     updateStepInfo();
                 }
@@ -379,23 +379,31 @@
                                 
                                 case 'opt':
                                     // Find the page that won't be used for the longest time
-                                    let farthestIndex = -1;
-                                    let farthestPage = -1;
+                                    let maxNextUse = -1;
+                                    replacedIndex = 0;
                                     
+                                    // Check each frame
                                     for (let j = 0; j < frames.length; j++) {
                                         const frame = frames[j];
-                                        let nextUse = pageReference.indexOf(frame, i + 1);
+                                        let nextUse = -1;
                                         
-                                        // If page not used again, replace it
+                                        // Find the next use of this frame's page
+                                        for (let k = i + 1; k < pageReference.length; k++) {
+                                            if (pageReference[k] === frame) {
+                                                nextUse = k;
+                                                break;
+                                            }
+                                        }
+                                        
+                                        // If page won't be used again, select it immediately
                                         if (nextUse === -1) {
-                                            farthestIndex = j;
-                                            farthestPage = frame;
+                                            replacedIndex = j;
                                             break;
-                                        } 
+                                        }
+                                        
                                         // If this page will be used later than current farthest, update
-                                        else if (nextUse > farthestIndex) {
-                                            farthestIndex = nextUse;
-                                            farthestPage = frame;
+                                        if (nextUse > maxNextUse) {
+                                            maxNextUse = nextUse;
                                             replacedIndex = j;
                                         }
                                     }
@@ -447,11 +455,11 @@
 
             function resetSimulation() {
                 // Reset to step 0
-                currentStepIndex = 0;
+                currentStepIndex = -1;
                 stopSimulation();
                 updateSimulationDisplay();
                 stepPrevBtn.disabled = true;
-                stepNextBtn.disabled = (simulationSteps.length <= 1);
+                stepNextBtn.disabled = false;
                 updateStepInfo();
                 
                 // Reset stats
@@ -518,6 +526,13 @@
 
             function updateStepInfo() {
                 currentStepDisplay.textContent = currentStepIndex + 1;
+                totalStepsDisplay.textContent = simulationSteps.length;
+                
+                if (currentStepIndex === -1) {
+                    currentPageDisplay.textContent = '-';
+                    actionInfoDisplay.textContent = 'Click Next or Play to start simulation';
+                    return;
+                }
                 
                 if (currentStepIndex < simulationSteps.length) {
                     const step = simulationSteps[currentStepIndex];
@@ -532,6 +547,11 @@
             }
 
             function updateSimulationDisplay() {
+                if (currentStepIndex === -1) {
+                    clearAllCells();
+                    return;
+                }
+                
                 if (currentStepIndex >= simulationSteps.length) return;
                 
                 const step = simulationSteps[currentStepIndex];
