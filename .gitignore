@@ -18,6 +18,8 @@ build/
 .nuxt-dist/
 .nuxt-prod/
 .tmp/auth_info.json
+auth_info.json
+
 # OS generated files
 .DS_Store
 .DS_Store?

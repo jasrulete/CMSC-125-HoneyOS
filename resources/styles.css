@@ -1159,6 +1159,8 @@ body {
 
 .hexagon-wrapper2 {
   display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .hexagon-wrapper3 {
@@ -2130,4 +2132,80 @@ i.fa-step-backward {
 * {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* Replacement Algorithm Page Styles */
+.replacement-algo-body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: white;
+}
+
+.replacement-algo-header {
+    background-color: #FFD700;
+    padding: 1rem;
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    height: 60px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.replacement-algo-back-button {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #333;
+    padding: 10px 20px;
+    transition: transform 0.2s;
+}
+
+.replacement-algo-back-button:hover {
+    transform: scale(1.1);
+}
+
+.replacement-algo-content {
+    margin-top: 80px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.replacement-algo-title {
+    text-align: center;
+    color: #333;
+}
+
+.hexagon2 i.fas {
+    font-size: 2em;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.hexagon2 label {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    color: #333;
+    margin-top: 5px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.hexagon2:hover {
+    background-color: #0B1215;
+}
+
+.hexagon2:hover i.fas,
+.hexagon2:hover label {
+    color: #ffc700;
 }

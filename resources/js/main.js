@@ -1602,3 +1602,7 @@ document.getElementById('code-editor').addEventListener('keyup', function() {
   updateFormatButtonState('italic-text');
   updateFormatButtonState('underline-text');
 });
+
+function openReplacementAlgo() {
+    window.location.href = 'replacement-algo.html';
+}
