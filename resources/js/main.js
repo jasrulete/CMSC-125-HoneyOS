@@ -42,37 +42,37 @@ function setBodyScale() {
   console.log(`Device pixel ratio: ${devicePixelRatio}, Applied scale: ${compensatedScale}`);
 }
 
-document.addEventListener('DOMContentLoaded', function() {
-  // Apply scaling immediately
-  setBodyScale();
+// document.addEventListener('DOMContentLoaded', function() {
+//   // Apply scaling immediately
+//   setBodyScale();
   
-  // Prevent scrolling
-  document.body.addEventListener('wheel', function(e) {
-    e.preventDefault();
-  }, { passive: false });
+//   // Prevent scrolling
+//   document.body.addEventListener('wheel', function(e) {
+//     e.preventDefault();
+//   }, { passive: false });
   
-  // Prevent pinch zoom
-  document.addEventListener('gesturestart', function(e) {
-    e.preventDefault();
-  });
+//   // Prevent pinch zoom
+//   document.addEventListener('gesturestart', function(e) {
+//     e.preventDefault();
+//   });
   
-  document.addEventListener('touchmove', function(e) {
-    if (e.touches.length > 1) {
-      e.preventDefault();
-    }
-  }, { passive: false });
+//   document.addEventListener('touchmove', function(e) {
+//     if (e.touches.length > 1) {
+//       e.preventDefault();
+//     }
+//   }, { passive: false });
   
-  // Prevent page scrolling with arrow keys, space, etc.
-  window.addEventListener('keydown', function(e) {
-    if(['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].indexOf(e.code) > -1 && 
-       !document.activeElement.matches('input, textarea, [contenteditable]')) {
-      e.preventDefault();
-    }
-  });
+//   // Prevent page scrolling with arrow keys, space, etc.
+//   window.addEventListener('keydown', function(e) {
+//     if(['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].indexOf(e.code) > -1 && 
+//        !document.activeElement.matches('input, textarea, [contenteditable]')) {
+//       e.preventDefault();
+//     }
+//   });
   
-  // Listen for window resize events to re-apply scaling
-  window.addEventListener('resize', setBodyScale);
-});
+//   // Listen for window resize events to re-apply scaling
+//   window.addEventListener('resize', setBodyScale);
+// });
 
 function onWindowClose() {
   Neutralino.app.exit();
@@ -84,57 +84,80 @@ Neutralino.events.on("windowClose", onWindowClose);
 document.addEventListener("DOMContentLoaded", function () {
   // Apply scaling immediately
   setBodyScale();
-  
-  // Check if we're on the splash screen
+
+  // Prevent scrolling and zooming
+  document.body.addEventListener("wheel", function (e) {
+    e.preventDefault();
+  }, { passive: false });
+
+  document.addEventListener("gesturestart", function (e) {
+    e.preventDefault();
+  });
+
+  document.addEventListener("touchmove", function (e) {
+    if (e.touches.length > 1) {
+      e.preventDefault();
+    }
+  }, { passive: false });
+
+  window.addEventListener("keydown", function (e) {
+    if (['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.code) &&
+        !document.activeElement.matches('input, textarea, [contenteditable]')) {
+      e.preventDefault();
+    }
+  });
+
+  window.addEventListener("resize", setBodyScale);
+
+  // Splash screen logic (index.html)
   const splashScreen = document.getElementById("splash-screen");
-  
   if (splashScreen) {
-    // We're on the splash screen (index.html)
-    setTimeout(function () {
-      // Start the fade out animation
+    setTimeout(() => {
       splashScreen.style.transition = "opacity 1s ease-out";
       splashScreen.style.opacity = 0;
-      
-      setTimeout(function () {
-        // Instead of traditional redirect, use a smoother transition
-        // First, fetch index2.html content
-        fetch('index2.html')
+
+      setTimeout(() => {
+        fetch("index2.html")
           .then(response => response.text())
           .then(html => {
-            // Create a temporary container to process the HTML
-            const tempDiv = document.createElement('div');
+            const tempDiv = document.createElement("div");
             tempDiv.innerHTML = html;
-            
-            // Extract the body content from the fetched HTML
-            const newBodyContent = tempDiv.querySelector('body').innerHTML;
-            
-            // Apply a fade-in effect for the new content
-            const mainContent = document.createElement('div');
+            const newBodyContent = tempDiv.querySelector("body").innerHTML;
+
+            const mainContent = document.createElement("div");
             mainContent.innerHTML = newBodyContent;
             mainContent.style.opacity = 0;
-            mainContent.style.transition = 'opacity 0.5s ease-in';
-            
-            // Clear the current body content but maintain scaling
-            document.body.innerHTML = '';
-            
-            // Append the new content
+            mainContent.style.transition = "opacity 0.5s ease-in";
+
+            document.body.innerHTML = "";
             document.body.appendChild(mainContent);
-            
-            // Force a reflow to ensure smooth transition
+
+            setTimeout(() => {
+              const shutdownButton = document.getElementById("shutdown-button");
+              if (shutdownButton) {
+                console.log("✅ Shutdown button found. Binding...");
+                shutdownButton.addEventListener("click", shutdown);
+              } else {
+                console.warn("❌ Shutdown button not found.");
+              }
+            }, 50);
+
             void mainContent.offsetWidth;
-            
-            // Fade in the new content
             mainContent.style.opacity = 1;
-            
-            // Execute any scripts in the new content
-            const scripts = Array.from(tempDiv.querySelectorAll('script'));
+
+            // 🔁 Re-bind shutdown button
+            const shutdownButton = document.getElementById("shutdown-button");
+            if (shutdownButton) {
+              shutdownButton.addEventListener("click", shutdown);
+            }
+
+            // Inject new scripts
+            const scripts = Array.from(tempDiv.querySelectorAll("script"));
             scripts.forEach(script => {
-              // Skip scripts that were already loaded in the head
-              if (script.src && (script.src.includes('neutralino.js') || script.src.includes('main.js'))) {
+              if (script.src && (script.src.includes("neutralino.js") || script.src.includes("main.js"))) {
                 return;
               }
-              
-              const newScript = document.createElement('script');
+              const newScript = document.createElement("script");
               if (script.src) {
                 newScript.src = script.src;
               } else {
@@ -142,160 +165,137 @@ document.addEventListener("DOMContentLoaded", function () {
               }
               document.body.appendChild(newScript);
             });
-            
-            // Reapply scaling to ensure it's maintained
+
             setBodyScale();
           })
           .catch(error => {
-            console.error('Error during page transition:', error);
-            // Fallback to traditional redirect if fetch fails
+            console.error("Error during page transition:", error);
             window.location.href = "index2.html";
           });
-      }, 1000);
+      }, 100);
     }, 10000);
   }
 
-  const textEditorHexagon = document.querySelector(
-    ".hexagon-wrapper:nth-child(1) .hexagon"
-  );
-  const fileExplorerHexagon = document.querySelector(
-    ".hexagon-wrapper:nth-child(2) .hexagon"
-  );
-  const cameraHexagon = document.querySelector(
-    ".hexagon-wrapper:nth-child(3) .hexagon"
-  );
-  const musicPlayerHexagon = document.querySelector(
-    ".hexagon-wrapper:nth-child(4) .hexagon"
-  );
+  // Set up hexagon feature events
+  const textEditorHexagon = document.querySelector(".hexagon-wrapper:nth-child(1) .hexagon");
+  const fileExplorerHexagon = document.querySelector(".hexagon-wrapper:nth-child(2) .hexagon");
+  const cameraHexagon = document.querySelector(".hexagon-wrapper:nth-child(3) .hexagon");
+  const musicPlayerHexagon = document.querySelector(".hexagon-wrapper:nth-child(4) .hexagon");
 
-  textEditorHexagon.addEventListener("click", createNewFile);
-  fileExplorerHexagon.addEventListener("click", openFile);
-  cameraHexagon.addEventListener("click", openCamera);
-  musicPlayerHexagon.addEventListener("click", openMusic);
+  if (textEditorHexagon) textEditorHexagon.addEventListener("click", createNewFile);
+  if (fileExplorerHexagon) fileExplorerHexagon.addEventListener("click", openFile);
+  if (cameraHexagon) cameraHexagon.addEventListener("click", openCamera);
+  if (musicPlayerHexagon) musicPlayerHexagon.addEventListener("click", openMusic);
 
   const editorTask = document.getElementById("editor-task");
-  editorTask.addEventListener("click", toggleEditor);
+  if (editorTask) editorTask.addEventListener("click", toggleEditor);
 
-  // --- Add this block to enable resizing ---
+  // Enable resizing logic
   const container = document.getElementById("editor-container");
+  if (container) {
+    let isResizing = false;
+    let currentEdge = null;
+    let startX, startY;
+    let startWidth, startHeight;
+    let startLeft, startTop;
 
-  let isResizing = false;
-  let currentEdge = null;
-  let startX, startY;
-  let startWidth, startHeight;
-  let startLeft, startTop;
-  
-  const MIN_WIDTH = 300;
-  const MIN_HEIGHT = 200;
-  const EDGE_THRESHOLD = 10;
-  
-  // Detect edges for resizing
-  container.addEventListener("mousemove", (e) => {
-    if (isResizing) return;
-  
-    const rect = container.getBoundingClientRect();
-    const offsetX = e.clientX - rect.left;
-    const offsetY = e.clientY - rect.top;
-  
-    container.classList.remove(
-      "edge-top", "edge-bottom", "edge-left", "edge-right",
-      "edge-top-left", "edge-top-right", "edge-bottom-left", "edge-bottom-right"
-    );
-  
-    let edge = null;
-    const onLeft = offsetX < EDGE_THRESHOLD;
-    const onRight = offsetX > rect.width - EDGE_THRESHOLD;
-    const onTop = offsetY < EDGE_THRESHOLD;
-    const onBottom = offsetY > rect.height - EDGE_THRESHOLD;
-  
-    if (onTop && onLeft) edge = "top-left";
-    else if (onTop && onRight) edge = "top-right";
-    else if (onBottom && onLeft) edge = "bottom-left";
-    else if (onBottom && onRight) edge = "bottom-right";
-    else if (onTop) edge = "top";
-    else if (onBottom) edge = "bottom";
-    else if (onLeft) edge = "left";
-    else if (onRight) edge = "right";
-  
-    if (edge) {
-      container.classList.add("edge-" + edge);
-      currentEdge = edge;
-    } else {
+    const MIN_WIDTH = 300;
+    const MIN_HEIGHT = 200;
+    const EDGE_THRESHOLD = 10;
+
+    container.addEventListener("mousemove", (e) => {
+      if (isResizing) return;
+
+      const rect = container.getBoundingClientRect();
+      const offsetX = e.clientX - rect.left;
+      const offsetY = e.clientY - rect.top;
+
+      container.classList.remove(
+        "edge-top", "edge-bottom", "edge-left", "edge-right",
+        "edge-top-left", "edge-top-right", "edge-bottom-left", "edge-bottom-right"
+      );
+
+      let edge = null;
+      const onLeft = offsetX < EDGE_THRESHOLD;
+      const onRight = offsetX > rect.width - EDGE_THRESHOLD;
+      const onTop = offsetY < EDGE_THRESHOLD;
+      const onBottom = offsetY > rect.height - EDGE_THRESHOLD;
+
+      if (onTop && onLeft) edge = "top-left";
+      else if (onTop && onRight) edge = "top-right";
+      else if (onBottom && onLeft) edge = "bottom-left";
+      else if (onBottom && onRight) edge = "bottom-right";
+      else if (onTop) edge = "top";
+      else if (onBottom) edge = "bottom";
+      else if (onLeft) edge = "left";
+      else if (onRight) edge = "right";
+
+      if (edge) {
+        container.classList.add("edge-" + edge);
+        currentEdge = edge;
+      } else {
+        currentEdge = null;
+      }
+    });
+
+    container.addEventListener("mousedown", (e) => {
+      if (!currentEdge) return;
+
+      e.preventDefault();
+      e.stopPropagation();
+
+      isResizing = true;
+
+      const styles = window.getComputedStyle(container);
+      startX = e.clientX;
+      startY = e.clientY;
+      startWidth = parseFloat(styles.width);
+      startHeight = parseFloat(styles.height);
+      startLeft = parseFloat(styles.left);
+      startTop = parseFloat(styles.top);
+
+      document.addEventListener("mousemove", onResize);
+      document.addEventListener("mouseup", stopResize);
+      document.getElementById("editor-header").addEventListener("mousedown", startDragging);
+    });
+
+    function onResize(e) {
+      if (!isResizing) return;
+
+      const dx = e.clientX - startX;
+      const dy = e.clientY - startY;
+
+      if (currentEdge.includes("right")) {
+        container.style.width = Math.max(MIN_WIDTH, startWidth + dx) + "px";
+      }
+
+      if (currentEdge.includes("bottom")) {
+        container.style.height = Math.max(MIN_HEIGHT, startHeight + dy) + "px";
+      }
+
+      if (currentEdge.includes("left")) {
+        const proposedWidth = startWidth - dx;
+        if (proposedWidth > MIN_WIDTH) {
+          container.style.width = proposedWidth + "px";
+          container.style.left = (startLeft + dx) + "px";
+        }
+      }
+
+      if (currentEdge.includes("top")) {
+        const proposedHeight = startHeight - dy;
+        if (proposedHeight > MIN_HEIGHT) {
+          container.style.height = proposedHeight + "px";
+          container.style.top = (startTop + dy) + "px";
+        }
+      }
+    }
+
+    function stopResize() {
+      isResizing = false;
       currentEdge = null;
+      document.removeEventListener("mousemove", onResize);
+      document.removeEventListener("mouseup", stopResize);
     }
-  });
-  
-  // Start resizing
-  container.addEventListener("mousedown", (e) => {
-    if (!currentEdge) return;
-  
-    e.preventDefault();
-    e.stopPropagation(); // 🛑 Prevents triggering dragging
-  
-    isResizing = true;
-  
-    const styles = window.getComputedStyle(container);
-    startX = e.clientX;
-    startY = e.clientY;
-    startWidth = parseFloat(styles.width);
-    startHeight = parseFloat(styles.height);
-    startLeft = parseFloat(styles.left);
-    startTop = parseFloat(styles.top);
-  
-    document.addEventListener("mousemove", onResize);
-    document.addEventListener("mouseup", stopResize);
-    document.getElementById("editor-header").addEventListener("mousedown", startDragging);
-  });
-  
-  // Resize logic
-  function onResize(e) {
-    if (!isResizing) return;
-  
-    const dx = e.clientX - startX;
-    const dy = e.clientY - startY;
-  
-    let newWidth = startWidth;
-    let newHeight = startHeight;
-    let newLeft = startLeft;
-    let newTop = startTop;
-  
-    // Right edge
-    if (currentEdge.includes("right")) {
-      newWidth = Math.max(MIN_WIDTH, startWidth + dx);
-      container.style.width = newWidth + "px";
-    }
-  
-    // Bottom edge
-    if (currentEdge.includes("bottom")) {
-      newHeight = Math.max(MIN_HEIGHT, startHeight + dy);
-      container.style.height = newHeight + "px";
-    }
-  
-    // Left edge
-    if (currentEdge.includes("left")) {
-      const proposedWidth = startWidth - dx;
-      if (proposedWidth > MIN_WIDTH) {
-        container.style.width = proposedWidth + "px";
-        container.style.left = (startLeft + dx) + "px";
-      }
-    }
-  
-    // Top edge
-    if (currentEdge.includes("top")) {
-      const proposedHeight = startHeight - dy;
-      if (proposedHeight > MIN_HEIGHT) {
-        container.style.height = proposedHeight + "px";
-        container.style.top = (startTop + dy) + "px";
-      }
-    }
-  }
-  
-  // Stop resizing
-  function stopResize() {
-    isResizing = false;
-    currentEdge = null;
-    document.removeEventListener("mousemove", onResize);
-    document.removeEventListener("mouseup", stopResize);
   }
 });
 
@@ -482,13 +482,20 @@ function removeCodeEditor() {
 let currentUtterance = null;
 
 function speakText(text) {
+  if (!text || typeof text !== "string") {
+    console.warn("❌ speakText() was called with invalid input:", text);
+    return;
+  }
+
   if (currentUtterance) {
     window.speechSynthesis.cancel();
   }
+
   const utterance = new SpeechSynthesisUtterance(text);
   currentUtterance = utterance;
   window.speechSynthesis.speak(utterance);
 }
+
 
 async function createNewFile() {
   minimized = false;
@@ -1241,8 +1248,11 @@ async function shutdown() {
   }
 }
 
-const shutdownButton = document.getElementById("shutdown-button");
-shutdownButton.addEventListener("click", shutdown);
+document.addEventListener("click", function (e) {
+  if (e.target && e.target.id === "shutdown-button") {
+    shutdown();
+  }
+});
 
 let isDragging = false;
 let initialMouseX, initialMouseY;
@@ -1359,8 +1369,8 @@ window.onload = function () {
   const toggleButton = document.getElementById("toggle-button");
   toggleButton.addEventListener("click", toggleMode);
 
-  const shutdownButton = document.getElementById("shutdown-button");
-  shutdownButton.addEventListener("click", shutdown);
+  // const shutdownButton = document.getElementById("shutdown-button");
+  // shutdownButton.addEventListener("click", shutdown);
 };
 
 function openMusic() {
