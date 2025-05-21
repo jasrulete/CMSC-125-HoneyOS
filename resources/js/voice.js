@@ -534,10 +534,16 @@ function playSound(soundFile) {
 // Function to speak text with a specific voice
 // Function to speak text with Microsoft Zira voice
 function speakText(text) {
-  speechSynthesis.speak(text, {
-    voice: 'Microsoft Zira Desktop - English (United States)',
-    keepAliveOnThreadDetach: true,
-  });
+  const utterance = new SpeechSynthesisUtterance(text);
+
+  // Optional: Set a specific voice if needed
+  const voices = speechSynthesis.getVoices();
+  const zira = voices.find(voice => voice.name.includes("Zira"));
+  if (zira) {
+    utterance.voice = zira;
+  }
+
+  speechSynthesis.speak(utterance);
 }
 
 // Function to update the microphone image based on listening state

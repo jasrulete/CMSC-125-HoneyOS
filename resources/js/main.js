@@ -119,6 +119,14 @@ document.addEventListener("DOMContentLoaded", function () {
             
             // Append the new content
             document.body.appendChild(mainContent);
+
+            initDrawerFeatures(); // re-run drawer logic after DOM is ready
+
+            // Rebind shutdown button
+            const shutdownButton = document.getElementById("shutdown-button");
+            if (shutdownButton) {
+              shutdownButton.addEventListener("click", shutdown);
+            }
             
             // Force a reflow to ensure smooth transition
             void mainContent.offsetWidth;
@@ -1188,55 +1196,20 @@ function closeGallery() {
   document.getElementById("gallery-modal").classList.add("hidden");
 }
 
-async function shutdown() {
+function shutdown() {
+  console.log("Shutdown button clicked");
+
   if (codeEditor || camera) {
-    const alertMessage = "Some tabs are open. Close them first.";
-    speakText(alertMessage);
-    alert(alertMessage);
+    speakText("Some tabs are open. Close them first.");
+    alert("Some tabs are open. Close them first.");
   } else {
-    const confirmMessage = "Are you sure you want to shut down?";
-    speakText(confirmMessage);
-    const confirmed = window.confirm(confirmMessage);
+    speakText("Are you sure you want to shut down?");
+    const confirmed = confirm("Are you sure you want to shut down?");
     window.speechSynthesis.cancel();
 
-    // If user confirms, proceed with shutdown process
     if (confirmed) {
-      // Load shutdown.html dynamically
-      const xhr = new XMLHttpRequest();
-      xhr.open("GET", "shutdown.html", true);
-      xhr.onreadystatechange = function () {
-        if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
-          // Create a div element and set its innerHTML to the content of shutdown.html
-          const div = document.createElement("div");
-          div.innerHTML = xhr.responseText;
-          // Set styles for the div
-          div.style.position = "fixed";
-          div.style.top = "0";
-          div.style.left = "0";
-          div.style.width = "100%";
-          div.style.height = "100%";
-          div.style.backgroundColor = "rgba(0,0,0)";
-          div.style.zIndex = "9999";
-          div.style.display = "flex";
-          div.style.justifyContent = "center";
-          div.style.alignItems = "center";
-          // Append the div to the body
-          document.body.appendChild(div);
-
-          // // Play the sound
-          // const audio = new Audio("sfx/shutdown.mp3"); // Replace 'path/to/sound.mp3' with the actual path to your sound file
-          // audio.play();
-
-          // Set a timeout to execute Neutralino.app.exit() after 5 seconds
-          setTimeout(function () {
-            // Remove the shutdown splash screen
-            div.parentNode.removeChild(div);
-            // Exit the application
-            Neutralino.app.exit();
-          }, 4000); // 5000 milliseconds = 5 seconds
-        }
-      };
-      xhr.send();
+      // Just redirect — shutdown.html will handle the animation and app.exit
+      window.location.href = "shutdown.html";
     }
   }
 }
@@ -1358,9 +1331,6 @@ window.onload = function () {
   // Event listener for button click to toggle mode
   const toggleButton = document.getElementById("toggle-button");
   toggleButton.addEventListener("click", toggleMode);
-
-  const shutdownButton = document.getElementById("shutdown-button");
-  shutdownButton.addEventListener("click", shutdown);
 };
 
 function openMusic() {
