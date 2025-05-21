@@ -1,104 +1,81 @@
-<!-- shutdown.html -->
-
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shutdown Splash Screen</title>
-    <!-- Add your styles here if needed -->
-    <style>
-        /* Example styles */
-        body {
-            background-color: #000000;
-            font-family: Arial, sans-serif;
-            text-align: center;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Shutdown Splash Screen</title>
+  <style>
+    body {
+      background-color: #000000;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+    }
 
-        h1 {
-            color: #ffc700;
-            opacity: 0;
-            /* Initially hidden */
-            animation: fadeIn 3s forwards;
-            /* Fade in over 3 seconds */
-        }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
 
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                /* Start with fully transparent */
-            }
+    .shutdownElements {
+      text-align: center;
+      z-index: 1;
+    }
 
-            to {
-                opacity: 1;
-                /* Fade in to fully visible */
-            }
-        }
+    .shutdown-text {
+      color: #ffc700;
+      font-size: 2em;
+      opacity: 0;
+      animation: fadeIn 4s forwards;
+    }
 
-        .shutdownElements {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
+    .animated-image {
+      width: 50px;
+      height: auto;
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      animation: snakeMove 4s linear forwards; /* Only once */
+      z-index: 2;
+    }
 
-
-        /* .animated-image {
-            width: 50px;
-            height: auto;
-            animation: fadeIn 3s forwards;  
-        } */
-        .animated-image {
-            width: 50px;
-            height: auto;
-            position: absolute;
-            top: 50%;
-            animation: snakeMove 4s linear infinite;
-            margin-bottom: 30px;
-        }
-
-        @keyframes snakeMove {
-            0% {
-                left: 500px;
-                top: 50%;
-                transform: transform(0) rotate(0deg);
-            }
-
-            25% {
-                top: calc(50% - 50px);
-                transform: transform(-50px) rotate(45deg);
-            }
-
-            50% {
-                top: calc(50% + 50px);
-                transform: transform(50px) rotate(-45deg);
-            }
-
-            75% {
-                top: calc(50% - 50px);
-                transform: transform(-50px) rotate(45deg);
-            }
-
-            100% {
-                left: calc(100% - 600px);
-
-                top: 50%;
-                transform: transform(0) rotate(0deg);
-            }
-        }
-
-
-    </style>
+    @keyframes snakeMove {
+      0%   { left: -60px; top: 50%; transform: translateY(-50%) rotate(0deg); }
+      25%  { top: 45%; transform: translateY(-50%) rotate(45deg); }
+      50%  { top: 55%; transform: translateY(-50%) rotate(-45deg); }
+      75%  { top: 45%; transform: translateY(-50%) rotate(45deg); }
+      100% { left: 100vw; top: 50%; transform: translateY(-50%) rotate(0deg); }
+    }
+  </style>
 </head>
 
 <body>
-    <audio id="shutdownSound" autoplay>
-        <source src="sfx/shutdown.mp3" type="audio/mpeg">
-    </audio>
-    <div class="shutdownElements">
-        <img src="img/shutdownBee.png" alt="Animated Image" class="animated-image">
-        <h1>Shutting Down...</h1>
-    </div>
-</body>
+  <audio id="shutdownSound" autoplay>
+    <source src="sfx/shutdown.mp3" type="audio/mpeg" />
+  </audio>
 
+  <div class="shutdownElements">
+    <h1 class="shutdown-text">Shutting Down...</h1>
+  </div>
+
+  <img src="img/shutdownBee.png" alt="Animated Image" class="animated-image" />
+
+  <script src="js/neutralino.js"></script>
+  <script>
+    Neutralino.init();
+    Neutralino.events.on("ready", () => {
+      console.log("Neutralino initialized. Shutting down in 4 seconds...");
+      setTimeout(() => {
+        console.log("Calling Neutralino.app.exit()");
+        Neutralino.app.exit();
+      }, 4000);
+    });
+  </script>
+</body>
 </html>
