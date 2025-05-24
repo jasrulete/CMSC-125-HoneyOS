@@ -2767,3 +2767,171 @@ i.fa-step-backward {
     text-align: center;
     font-weight: bold;
 }
+
+/* Custom Bee-Themed Alert System */
+.bee-alert-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.bee-alert-overlay.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.bee-alert-box {
+    background: #FFD700;
+    border: 4px solid #FF8C00;
+    border-radius: 20px;
+    padding: 30px;
+    max-width: 400px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    position: relative;
+    transform: scale(0.7);
+    transition: transform 0.3s ease;
+}
+
+.bee-alert-overlay.show .bee-alert-box {
+    transform: scale(1);
+}
+
+.bee-alert-box::before {
+    content: "🐝";
+    font-size: 40px;
+    position: absolute;
+    top: -50px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(135deg, #FFD700);
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 3px solid #FF8C00;
+}
+
+.bee-alert-icon {
+    font-size: 50px;
+    margin-bottom: 5px;
+    animation: buzz 2s infinite;
+}
+
+@keyframes buzz {
+    0%, 50%, 100% { transform: translateX(0px); }
+    25% { transform: translateX(-3px); }
+    75% { transform: translateX(3px); }
+}
+
+.bee-alert-title {
+    font-size: 22px;
+    font-weight: bold;
+    color: #8B4513;
+    margin-bottom: 5px;
+    padding-top:-20px;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.bee-alert-message {
+    font-size: 16px;
+    color: #654321;
+    margin-bottom: 25px;
+    line-height: 1.4;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.bee-alert-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+}
+
+.bee-button {
+    padding: 12px 25px;
+    border: none;
+    border-radius: 25px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.bee-button-ok {
+    background: linear-gradient(135deg, #32CD32, #228B22);
+    color: white;
+    box-shadow: 0 4px 15px rgba(50, 205, 50, 0.3);
+}
+
+.bee-button-cancel {
+    background: linear-gradient(135deg, #FF6B6B, #FF4444);
+    color: white;
+    box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+}
+
+.bee-button-ok:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(50, 205, 50, 0.4);
+}
+
+.bee-button-cancel:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+}
+
+/* Special Honeycomb Design for Shutdown */
+.bee-alert-box.shutdown {
+    background:linear-gradient(135deg, #FFD700);
+    border: 3px solid #FF8C00;
+    position: relative;
+}
+
+.bee-alert-box.shutdown::after {
+    content: "";
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    right: -10px;
+    bottom: -10px;
+    background: linear-gradient(135deg, #FFD700);
+    border: 3px solid #FF8C00;
+    border-radius: 25px;
+    z-index: -1;
+}
+
+/* File Management Error Style */
+.bee-alert-box.file-error {
+    background: linear-gradient(135deg, #FFE4B5, #FFD700);
+    border: 4px solid #DAA520;
+}
+
+/* Input Validation Style */
+.bee-alert-box.validation {
+    background: linear-gradient(135deg, #FFF8DC, #FFD700);
+    border: 4px solid #B8860B;
+}
+/* Browser Compatibility Style */
+.bee-alert-box.compatibility {
+    background: linear-gradient(135deg, #FFFACD, #FFD700);
+    border: 4px solid #CD853F;
+}
+
+/* Application State Style */
+.bee-alert-box.app-state {
+    background: linear-gradient(135deg, #F0E68C, #FFD700);
+    border: 4px solid #DAA520;
+}

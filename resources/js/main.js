@@ -605,10 +605,10 @@ async function saveFile() {
     } catch (err) {
       console.error("Failed to save file:", err);
     }
-  } else {
-    const alertMessage = "No file is currently open.";
-    speakText(alertMessage);
-    alert(alertMessage);
+  } else {    
+    const alertMessage = "No file is currently open.";    
+    speakText(alertMessage);    
+    beeAlert.appState(alertMessage, "File Status 📄");  
   }
 }
 
@@ -896,7 +896,7 @@ function openCamera() {
                 console.log("Image saved successfully:", fileName);
               } catch (error) {
                 console.error("Failed to save image:", error);
-                alert(`Failed to save image: ${error.message}`);
+                beeAlert.fileError(`Failed to save image: ${error.message}`, "Camera Error 📷");
               }
 
               // Update preview images
@@ -953,12 +953,14 @@ function openCamera() {
       })
       .catch(function (error) {
         console.error("Error accessing camera:", error);
-        const errorMessage = "Error accessing camera.";
-        speakText(errorMessage);
-        alert(errorMessage);
+        camera = false; // Reset camera state on error
+        const errorMessage = "Error accessing camera.";        
+        speakText(errorMessage);        
+        beeAlert.fileError(errorMessage, "Camera Access Error 📷");
       });
   } else {
-    alert("getUserMedia is not supported by your browser");
+    camera = false; // Reset camera state if not supported
+    beeAlert.browserCompatibility("getUserMedia is not supported by your browser", "Browser Compatibility 🌐");
   }
 }
 
@@ -994,7 +996,7 @@ async function openPhotoGallery() {
     });
 
     if (imageFiles.length === 0) {
-      alert("No images found in the gallery.");
+      beeAlert.appState("No images found in the gallery.", "Gallery Status 🖼️");
       return;
     }
 
@@ -1084,7 +1086,7 @@ async function openPhotoGallery() {
     document.body.appendChild(galleryContainer);
   } catch (error) {
     console.error("Photo gallery error:", error);
-    alert("Failed to open photo gallery: " + error.message);
+    beeAlert.fileError("Failed to open photo gallery: " + error.message, "Gallery Error 🖼️");
   }
 }
 
@@ -1150,9 +1152,9 @@ async function openGallery() {
       return file.type === "FILE" && ["png", "jpg", "jpeg", "gif", "bmp"].includes(ext);
     });
 
-    if (imageFiles.length === 0) {
-      alert("No images found in the gallery.");
-      return;
+    if (imageFiles.length === 0) {    
+      beeAlert.appState("No images found in the gallery.", "Gallery Status 🖼️");      
+      return;    
     }
 
     const galleryContainer = document.getElementById("gallery-images");
@@ -1186,9 +1188,9 @@ async function openGallery() {
     }
 
     document.getElementById("gallery-modal").classList.remove("hidden");
-  } catch (error) {
-    console.error("Photo gallery error:", error);
-    alert("Failed to open photo gallery: " + error.message);
+  } catch (error) {    
+    console.error("Photo gallery error:", error);    
+    beeAlert.fileError("Failed to open photo gallery: " + error.message, "Gallery Error 🖼️");  
   }
 }
 
@@ -1196,24 +1198,29 @@ function closeGallery() {
   document.getElementById("gallery-modal").classList.add("hidden");
 }
 
-function shutdown() {
-  console.log("Shutdown button clicked");
-
-  if (codeEditor || camera) {
-    speakText("Some tabs are open. Close them first.");
-    alert("Some tabs are open. Close them first.");
-  } else {
-    speakText("Are you sure you want to shut down?");
-    const confirmed = confirm("Are you sure you want to shut down?");
-    window.speechSynthesis.cancel();
-
-    if (confirmed) {
-      // Just redirect — shutdown.html will handle the animation and app.exit
-      window.location.href = "shutdown.html";
-    }
+function shutdown() {  
+  console.log("Shutdown button clicked");  
+  
+  // Check if interfaces are actually visible rather than just boolean variables
+  const editorVisible = document.getElementById("editor-container") && !document.getElementById("editor-container").classList.contains("hidden");
+  const cameraVisible = document.querySelector(".camera-container") !== null;
+  const musicPlayerVisible = document.getElementById("music-player-container") && !document.getElementById("music-player-container").classList.contains("hidden");
+  
+  if (editorVisible || cameraVisible || musicPlayerVisible) {    
+    speakText("Some tabs are open. Close them first.");    
+    beeAlert.appState("Some tabs are open. Close them first.", "Application State 📋");  
+  } else {    
+    speakText("Are you sure you want to shut down?");    
+    beeAlert.shutdownConfirm("Are you sure you want to shut down Honey OS?").then((confirmed) => {      
+      window.speechSynthesis.cancel();      
+      
+      if (confirmed) {        
+        // Just redirect — shutdown.html will handle the animation and app.exit        
+        window.location.href = "shutdown.html";      
+      }    
+    });  
   }
 }
-
 const shutdownButton = document.getElementById("shutdown-button");
 shutdownButton.addEventListener("click", shutdown);
 

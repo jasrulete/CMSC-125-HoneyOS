@@ -475,7 +475,7 @@ function enableSpeechToText() {
 
     recognition.start();
   } else {
-    alert("Speech recognition is not supported in this browser.");
+    beeAlert.browserCompatibility("Speech recognition is not supported in this browser.", "Browser Compatibility 🌐");
   }
 }
 
