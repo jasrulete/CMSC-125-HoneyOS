@@ -1265,7 +1265,8 @@ body {
     height: 120px;
     background-color: #000000; /* Default background color */
     position: absolute;
-    margin: 3px; /* Adjust this value to increase or decrease the space between hexagons */
+    margin-left: -5.5px; 
+    margin-top: 4px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -2181,7 +2182,11 @@ i.fa-step-backward {
     margin: 0;
     padding: 0;
     font-family: Arial, sans-serif;
-    background-color: white;
+    background-image: url("../img/honey-bg.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
     display: flex;
     flex-direction: column;
     min-height: 100vh;
