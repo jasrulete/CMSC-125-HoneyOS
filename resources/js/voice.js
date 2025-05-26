@@ -7,7 +7,13 @@ let animationFrameId;
 
 // Function to handle the voice commands
 function handleVoiceCommand(command) {
-  if (command.includes("open text editor") || (command.includes("open text editor"))) {
+  if (
+    (command.includes("open") && command.includes("text editor")) ||
+    (command.includes("launch") && command.includes("text editor")) ||
+    (command.includes("start") && command.includes("text editor")) ||
+    (command === "text editor") ||
+    (command === "editor")
+  ) {
     if (codeEditor) {
       speakText("Text Editor is already open.");
     } else {
@@ -364,6 +370,18 @@ function handleVoiceCommand(command) {
     } else if (command.includes("close") || command.includes("exit")) {
       window.location.href = 'index2.html';
       speakText("Closing Replacement Algorithm.");
+    }
+  }
+  else if (
+    command.includes("scheduling algorithm") ||
+    command.includes("scheduling")
+  ) {
+    if (command.includes("open")) {
+      openSchedulerApp();
+      speakText("Opening Scheduling Algorithm.");
+    } else if (command.includes("close") || command.includes("exit")) {
+      window.location.href = 'index2.html';
+      speakText("Closing Scheduling Algorithm.");
     }
   }
 }
