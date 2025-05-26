@@ -867,7 +867,7 @@ function openCamera() {
                 const uint8Array = new Uint8Array(arrayBuffer);
 
                 // Change Directory Path to personal picure directory in local machine
-                const dirPath = "C:/Temp/camPics";
+                const dirPath = "Picture";
 
                 // Create directory if it doesn't exist
                 try {
@@ -875,19 +875,10 @@ function openCamera() {
                   if (!stats.isDirectory) {
                     throw new Error("Path exists but is not a directory.");
                   }
-                  console.log("Directory already exists.");
-                  // console.log("Attempting to create directory:", dirPath);
-                  // await Neutralino.filesystem.createDirectory(dirPath);
-                  // console.log("Directory created successfully.");
-                } catch (dirError) {
-                  if (error.code === "NE_FS_NOPATHE") {
-                    console.log("Directory does not exist. Creating...");
-                    await Neutralino.filesystem.createDirectory(dirPath);
-                  } else {
-                    throw error;
-                  }
+                } catch (error) {
+                  // If directory does not exist, create it
+                  await Neutralino.filesystem.createDirectory(dirPath);
                 }
-
                 const fileName = `${dirPath}/capture_${Date.now()}.png`;
                 await Neutralino.filesystem.writeBinaryFile(
                   fileName,
@@ -979,7 +970,7 @@ function arrayBufferToBase64(buffer) {
 
 // Function to open the photo gallery
 async function openPhotoGallery() {
-  const dirPath = "C:/Temp/camPics";
+  const dirPath = "Picture";
 
   try {
     // Check if the directory exists
@@ -1009,7 +1000,7 @@ async function openPhotoGallery() {
     Object.assign(galleryContainer.style, {
       display: "flex",
       flexWrap: "wrap",
-      justifyContent: "center",
+      justifyContent: "flex-start",
       alignItems: "flex-start",
       gap: "15px",
       padding: "20px",
@@ -1090,7 +1081,7 @@ async function openPhotoGallery() {
     document.body.appendChild(galleryContainer);
   } catch (error) {
     console.error("Photo gallery error:", error);
-    beeAlert.fileError("Failed to open photo gallery: " + error.message, "Gallery Error 🖼️");
+    beeAlert.fileError("Take a picture to create Gallery" + error.message, "Gallery Error 🖼️");
   }
 }
 
@@ -1143,7 +1134,7 @@ function viewFullImage(imagePath) {
 
 // Open the photo gallery when the button is clicked
 async function openGallery() {
-  const dirPath = "C:/Temp/camPics";
+  const dirPath = "Picture";
 
   try {
     const stats = await Neutralino.filesystem.getStats(dirPath);
@@ -1194,7 +1185,7 @@ async function openGallery() {
     document.getElementById("gallery-modal").classList.remove("hidden");
   } catch (error) {    
     console.error("Photo gallery error:", error);    
-    beeAlert.fileError("Failed to open photo gallery: " + error.message, "Gallery Error 🖼️");  
+    beeAlert.fileError("Take a picture to create gallery", "Gallery Error 🖼️");  
   }
 }
 
