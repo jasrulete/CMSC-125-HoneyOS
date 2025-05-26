@@ -15,11 +15,14 @@ function handleVoiceCommand(command) {
       speakText("Opening Text Editor");
     }
   } else if (command.includes("file explorer")) {
-    if (fileManager) {
-      speakText("File Manager is already open");
-    } else {
+    if (fileManager || command.includes("close file explorer")) {
+      closeFile();
+      speakText("Closing File Explorer");
+    } else if (command.includes("open file explorer")){
       openFile();
       speakText("Opening File Explorer.");
+    } else {
+      speakText("File Explorer is already open");
     }
   } else if (command.includes("camera")) {
     if (command.includes("open")) {
@@ -229,6 +232,14 @@ function handleVoiceCommand(command) {
     } else {
       speakText("Open Text Editor first.");
     }
+  } else if (command.includes("gallery")) {
+    if (command.includes("open")) {
+      openGallery();
+      speakText("Opening gallery.");
+    } else if (command.includes("close")) {
+      closeGallery();
+      speakText("Closing gallery.");
+    }
   } else if (command.includes("close text editor") || (command.includes("close the text editor"))) {
     if (codeEditor) {
       closeFile().then((result) => {
@@ -260,6 +271,61 @@ function handleVoiceCommand(command) {
     } else if (command.includes("close")) {
       closeCalendar();
       speakText("Closing calendar");
+    } else if (command.includes("go to")) {
+      const modal = document.getElementById('calendar-modal');
+      if (modal.classList.contains('hidden')) {
+        speakText("Please open the calendar first");
+        return;
+      }
+
+      // Extract the text after "go to"
+      const goToText = command.substring(command.indexOf("go to") + 5).replace(/please$/i, "").trim().toLowerCase();
+      
+      if (!goToText) {
+        speakText("Please specify a date, month, or year to go to");
+        return;
+      }
+
+      // Check if it's a day number (1-31)
+      const dayMatch = goToText.match(/^(\d{1,2})$/);
+      if (dayMatch) {
+        const day = parseInt(dayMatch[1]);
+        if (day >= 1 && day <= 31) {
+          const newDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), day);
+          // Check if it's a valid date (e.g., not February 31st)
+          if (newDate.getMonth() === currentDate.getMonth()) {
+            selectDate(newDate);
+            speakText("Going to " + newDate.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' }));
+          } else {
+            speakText("Invalid day for the current month");
+          }
+        } else {
+          speakText("Please specify a day between 1 and 31");
+        }
+        return;
+      }
+
+      // Check if it's a month name
+      const months = ["january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december"];
+      const monthIndex = months.indexOf(goToText);
+      if (monthIndex !== -1) {
+        currentDate.setMonth(monthIndex);
+        updateCalendar();
+        speakText("Going to " + months[monthIndex].charAt(0).toUpperCase() + months[monthIndex].slice(1));
+        return;
+      }
+
+      // Check if it's a year between 2000 and 2030
+      const yearMatch = goToText.match(/^(20[0-2][0-9]|2030)$/);
+      if (yearMatch) {
+        const year = parseInt(yearMatch[1]);
+        currentDate.setFullYear(year);
+        updateCalendar();
+        speakText("Going to year " + year);
+        return;
+      }
+
+      speakText("Please specify a valid day (1-31), month name, or year (2000-2030)");
     }
   } else if (command.includes("add event")) {
     // Handle add event command outside of calendar check
@@ -290,6 +356,14 @@ function handleVoiceCommand(command) {
       }
     } else {
       speakText("Please specify what event to add");
+    }
+  } else if (command.includes("replacement algorithm") || command.includes("replacement algo")) {
+    if (command.includes("open")) {
+      openReplacementAlgo();
+      speakText("Opening Replacement Algorithm.");
+    } else if (command.includes("close") || command.includes("exit")) {
+      window.location.href = 'index2.html';
+      speakText("Closing Replacement Algorithm.");
     }
   }
 }
