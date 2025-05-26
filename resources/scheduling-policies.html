@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CPU Scheduling Simulator</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" />
+  <link rel="stylesheet" href="scheduling/schedule.css">
+</head>
+<body>
+  <div class="window">
+    <div class="window-title-bar">
+      <div class="window-title">CPU Scheduling Simulator</div>
+      <div class="window-controls">
+        <button class="window-control-button close-button" onclick="window.location.href='index2.html'">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+    </div>
+    <div class="container">
+      <h1>CPU Scheduling Simulator</h1>
+
+      <!-- Policy Dropdown -->
+      <div id="policy-control">
+        <select id="policy-select">
+          <option value="">Select Scheduling Policy</option>
+          <option value="fcfs">First Come First Serve (FCFS)</option>
+          <option value="sjf">Shortest Job First (SJF)</option>
+          <option value="priority">Priority Queue</option>
+          <option value="rr">Round Robin</option>
+        </select>
+
+        <!-- ⏱ Quantum Input (only for RR) -->
+        <label for="time-quantum" id="quantum-label" style="display:none;">Quantum:</label>
+        <input type="number" id="time-quantum" value="2" min="1" style="display:none;" />
+      </div>
+
+      <!-- Custom Confirmation Dialog -->
+      <div id="confirmation-dialog" class="confirmation-dialog hidden">
+        <div class="confirmation-content">
+          <h2>Confirm Action</h2>
+          <p id="confirmation-message"></p>
+          <div class="confirmation-buttons">
+            <button id="confirm-yes" class="confirm-btn">
+              <i class="fas fa-check"></i> Yes
+            </button>
+            <button id="confirm-no" class="confirm-btn cancel">
+              <i class="fas fa-times"></i> No
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Control Buttons -->
+      <div id="controls">
+        <button id="add-process"><i class="fas fa-plus"></i> Add Random Process</button>
+        <button id="show-custom-form"><i class="fas fa-edit"></i> Add Custom Process</button>
+        <button id="play"><i class="fas fa-play"></i> Play</button>
+        <button id="pause"><i class="fas fa-pause"></i> Pause</button>
+        <button id="next"><i class="fas fa-step-forward"></i> Next</button>
+        <button id="back"><i class="fas fa-step-backward"></i> Back</button>
+        <button id="reset"><i class="fas fa-redo"></i> Reset</button>
+        <button id="clear-all"><i class="fas fa-trash"></i> Clear All</button>
+      </div>
+
+      <!-- Process Input Form -->
+      <div id="process-input" class="process-form hidden">
+        <div class="form-header">
+          <h2>Add Custom Process</h2>
+          <button class="close-form" onclick="document.getElementById('process-input').classList.add('hidden')">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <div class="form-group">
+          <label for="arrival-time">Arrival Time:</label>
+          <input type="number" id="arrival-time" min="0" value="0" />
+        </div>
+        <div class="form-group">
+          <label for="burst-time">Burst Time:</label>
+          <input type="number" id="burst-time" min="1" value="1" />
+        </div>
+        <div class="form-group">
+          <label for="priority">Priority (1-5):</label>
+          <input type="number" id="priority" min="1" max="5" value="1" />
+        </div>
+        <button id="add-custom-process" class="custom-button">
+          <i class="fas fa-plus"></i> Add Process
+        </button>
+      </div>
+
+      <!-- Table & Execution Log -->
+      <div id="process-table"></div>
+      <div id="gantt-chart"></div>
+      <div id="execution-log"></div>
+    </div>
+  </div>
+
+  <script src="scheduling/schedule.js"></script>
+</body>
+</html>

@@ -964,6 +964,10 @@ function openCamera() {
   }
 }
 
+function openSchedulerApp() {
+  window.location.href = 'scheduling-policies.html';
+}
+
 function arrayBufferToBase64(buffer) {
   const bytes = new Uint8Array(buffer);
   let binary = "";
