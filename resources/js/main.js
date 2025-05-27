@@ -677,7 +677,7 @@ async function closeFile() {
       const confirmMessage =
         "Are you sure you want to exit without saving the file?";
       speakText(confirmMessage);
-      const confirmClose = confirm(confirmMessage);
+      const confirmClose = await beeConfirm(confirmMessage, "Unsaved Changes");
       window.speechSynthesis.cancel();
       if (!confirmClose) {
         return false;
@@ -1278,6 +1278,11 @@ async function openGallery() {
         img.src = `data:${mimeType};base64,${base64}`;
         img.alt = entry;
         img.title = entry;
+
+        // Add click event listener to open full image view
+        img.addEventListener("click", function() {
+          viewFullImage(img.src);
+        });
 
         galleryContainer.appendChild(img);
       } catch (err) {
