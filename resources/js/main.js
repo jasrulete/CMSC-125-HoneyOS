@@ -718,7 +718,70 @@ async function redo() {
   }
 }
 
-async function speechToText() {}
+async function speechToText() {
+  // Check for browser compatibility
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+  if (!SpeechRecognition) {
+    console.error("Speech recognition not supported in this browser.");
+    // Optionally inform the user via UI
+    beeAlert.browserCompatibility("Speech recognition is not supported in your browser.", "Feature Not Supported 🚫");
+    return;
+  }
+
+  const recognition = new SpeechRecognition();
+  recognition.lang = 'en-US'; // Set language
+  recognition.interimResults = false; // Get final results only
+  recognition.maxAlternatives = 1; // Get only the most likely result
+
+  // Event handler for when speech recognition starts
+  recognition.onstart = function() {
+    console.log('Speech recognition started');
+    // Optionally update mic icon or UI to indicate listening
+    const micIcon = document.getElementById("micButton");
+    if(micIcon) micIcon.src = "img/Microphone_On.png"; // Assuming you have an 'on' icon
+  };
+
+  // Event handler for when speech is recognized
+  recognition.onresult = function(event) {
+    const transcript = event.results[0][0].transcript;
+    console.log('Recognized speech: ' + transcript);
+
+    // Get the code editor element
+    const codeEditor = document.getElementById("code-editor");
+
+    if (codeEditor) {
+      // Add the recognized text to the code editor
+      // For contenteditable div, we can append text
+      const currentContent = codeEditor.innerHTML;
+      const newContent = currentContent + transcript + ' '; // Add a space after dictated text
+      codeEditor.innerHTML = newContent;
+
+      // Optional: Place cursor at the end of the added text (more complex for contenteditable)
+      // For simplicity, just appending text for now.
+    } else {
+      console.error("Code editor element not found.");
+    }
+  };
+
+  // Event handler for errors
+  recognition.onerror = function(event) {
+    console.error('Speech recognition error', event);
+    // Optionally inform the user about the error
+    beeAlert.appState("Speech recognition error: " + event.error, "Speech Error ❌");
+  };
+
+  // Event handler for when speech recognition ends
+  recognition.onend = function() {
+    console.log('Speech recognition ended');
+    // Optionally reset mic icon or UI
+    const micIcon = document.getElementById("micButton");
+    if(micIcon) micIcon.src = "img/Microphone_Off.png"; // Reset to 'off' icon
+  };
+
+  // Start the recognition
+  recognition.start();
+}
 
 function minimizeEditor() {
   minimized = true;
