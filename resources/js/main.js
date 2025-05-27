@@ -1292,11 +1292,12 @@ function stopDragging() {
   isDragging = false;
 }
 
-document
-  .getElementById("code-editor")
-  .addEventListener("mousedown", function (event) {
+const codeEditorElement = document.getElementById("code-editor");
+if (codeEditorElement) {
+  codeEditorElement.addEventListener("mousedown", function (event) {
     event.stopPropagation();
   });
+}
 
 window.onload = function () {
   const container = document.getElementById("hexagon-container7");
@@ -1404,6 +1405,10 @@ function openMusicPlayer() {
   curr_time = document.querySelector(".current-time");
   total_duration = document.querySelector(".total-duration");
 
+  // Attach events
+  seek_slider.addEventListener("change", seekTo);
+  volume_slider.addEventListener("input", setVolume);
+
   // Load the current track when the music player is opened
   loadTrack(track_index);
 }
@@ -1475,9 +1480,9 @@ function loadTrack(index) {
 }
 
 function resetValues() {
-  curr_time.textContent = "00:00";
-  total_duration.textContent = "00:00";
-  seek_slider.value = 0;
+  if (curr_time) curr_time.textContent = "00:00";
+  if (total_duration) total_duration.textContent = "00:00";
+  if (seek_slider) seek_slider.value = 0;
 }
 
 function playpauseTrack() {
@@ -1519,10 +1524,10 @@ function setVolume() {
 
 function updateSeek() {
   if (!isNaN(curr_track.duration)) {
-    seek_slider.value = Math.floor(curr_track.currentTime);
+    if (seek_slider) seek_slider.value = Math.floor(curr_track.currentTime);
 
-    curr_time.textContent = formatTime(curr_track.currentTime);
-    total_duration.textContent = formatTime(curr_track.duration);
+    if (curr_time) curr_time.textContent = formatTime(curr_track.currentTime);
+    if (total_duration) total_duration.textContent = formatTime(curr_track.duration);
   }
 }
 
@@ -1533,10 +1538,6 @@ function formatTime(seconds) {
   if (secs < 10) secs = "0" + secs;
   return `${minutes}:${secs}`;
 }
-
-// Attach events
-seek_slider.addEventListener("input", seekTo);
-volume_slider.addEventListener("input", setVolume);
 
 function formatBold() {
   document.execCommand('bold', false, null);
