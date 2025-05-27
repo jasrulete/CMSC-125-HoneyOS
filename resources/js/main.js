@@ -11,6 +11,46 @@ let lastSavedContent = "";
 let saveInterval = 2000; // Save every 2 seconds
 let fileManager;
 let editorState = "normal"; // 'minimized', 'normal', or 'maximized'
+let isPlaying = false;
+let track_index = 0;
+let updateTimer;
+
+let curr_track = document.createElement("audio");
+
+let now_playing;
+let track_art;
+let track_name;
+let track_artist;
+
+let playpause_btn;
+let next_btn;
+let prev_btn;
+
+let seek_slider;
+let volume_slider;
+let curr_time;
+let total_duration;
+
+let track_list = [
+  {
+    name: "Houdini (Extended Edit)",
+    artist: "Dua Lipa",
+    image: "songCov/houdini.png",
+    path: "songs/houdini.mp3",
+  },
+  {
+    name: "intro (end of the world)",
+    artist: "Ariana Grande",
+    image: "songCov/intro.png",
+    path: "songs/intro.mp3",
+  },
+  {
+    name: "10 Minutes",
+    artist: "Lee Hyori",
+    image: "songCov/minute.png",
+    path: "songs/minute.mp3",
+  },
+];
 
 // Improve the scaling function to handle different system scaling settings
 // Define scaling function globally so it can be called immediately
@@ -1346,65 +1386,39 @@ function openMusicPlayer() {
   );
   const hexagonContainer = document.querySelector(".hexagon-container");
 
-  musicPlayerContainer.classList.remove("hidden");
-  hexagonContainer.classList.add("hidden");
+  if (musicPlayerContainer) musicPlayerContainer.classList.remove("hidden");
+  if (hexagonContainer) hexagonContainer.classList.add("hidden");
+
+  // Query and assign music player UI elements here, after the container is shown
+  now_playing = document.querySelector(".now-playing");
+  track_art = document.querySelector(".track-art");
+  track_name = document.querySelector(".track-name");
+  track_artist = document.querySelector(".track-artist");
+
+  playpause_btn = document.querySelector(".playpause-track");
+  next_btn = document.querySelector(".next-track");
+  prev_btn = document.querySelector(".prev-track");
+
+  seek_slider = document.querySelector(".seek_slider");
+  volume_slider = document.querySelector(".volume_slider");
+  curr_time = document.querySelector(".current-time");
+  total_duration = document.querySelector(".total-duration");
+
+  // Load the current track when the music player is opened
+  loadTrack(track_index);
 }
 
 function closeMusicPlayer() {
   if (isPlaying) {
-    pauseTrack(); // Pause the currently playing track
+    pauseTrack();
   }
   musicPlayer = false;
-  const musicPlayerContainer = document.getElementById(
-    "music-player-container"
-  );
+  const musicPlayerContainer = document.getElementById("music-player-container");
   const hexagonContainer = document.querySelector(".hexagon-container");
 
-  musicPlayerContainer.classList.add("hidden");
-  hexagonContainer.classList.remove("hidden");
+  if (musicPlayerContainer) musicPlayerContainer.classList.add("hidden");
+  if (hexagonContainer) hexagonContainer.classList.remove("hidden");
 }
-
-let now_playing = document.querySelector(".now-playing");
-let track_art = document.querySelector(".track-art");
-let track_name = document.querySelector(".track-name");
-let track_artist = document.querySelector(".track-artist");
-
-let playpause_btn = document.querySelector(".playpause-track");
-let next_btn = document.querySelector(".next-track");
-let prev_btn = document.querySelector(".prev-track");
-
-let seek_slider = document.querySelector(".seek_slider");
-let volume_slider = document.querySelector(".volume_slider");
-let curr_time = document.querySelector(".current-time");
-let total_duration = document.querySelector(".total-duration");
-
-let track_index = 0;
-let isPlaying = false;
-let updateTimer;
-
-let curr_track = document.createElement("audio");
-
-// Define the tracks
-let track_list = [
-  {
-    name: "Houdini (Extended Edit)",
-    artist: "Dua Lipa",
-    image: "songCov/houdini.png",
-    path: "songs/houdini.mp3",
-  },
-  {
-    name: "intro (end of the world)",
-    artist: "Ariana Grande",
-    image: "songCov/intro.png",
-    path: "songs/intro.mp3",
-  },
-  {
-    name: "10 Minutes",
-    artist: "Lee Hyori",
-    image: "songCov/minute.png",
-    path: "songs/minute.mp3",
-  },
-];
 
 function random_bg_color() {
   // Get a number between 64 to 256 (for getting lighter colors)

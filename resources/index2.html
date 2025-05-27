@@ -530,6 +530,10 @@
   
     <div id="music-player-container" class="hidden">
       <div class="player">
+        <!-- Close button in the top right corner -->
+        <button id="close-music-player-btn" aria-label="Close Music Player" style="position:absolute;top:20px;right:20px;background:transparent;border:none;font-size:2rem;color:white;z-index:10;cursor:pointer;" onclick="closeMusicPlayer()">
+          <i class="fa fa-times"></i>
+        </button>
         <div class="details">
           <div class="now-playing">PLAYING x OF y</div>
           <div class="track-art"></div>
@@ -551,7 +555,6 @@
           <input type="range" min="1" max="100" value="99" class="volume_slider" onchange="setVolume()">
           <i class="fa fa-volume-up"></i>
         </div>
-        <div class="close-btn" onclick="closeMusicPlayer()"><i class="fa fa-times"></i></div>
       </div>
     </div>
     
@@ -669,5 +672,14 @@
     <script src="js/Battery.js"></script>    
     <script src="js/calendar.js"></script>
     
+    <script>
+    // Add event listener for the new close button
+    window.addEventListener('DOMContentLoaded', function() {
+      var closeBtn = document.getElementById('close-music-player-btn');
+      if(closeBtn) {
+        closeBtn.addEventListener('click', closeMusicPlayer);
+      }
+    });
+    </script>
         </body>
 </html>
